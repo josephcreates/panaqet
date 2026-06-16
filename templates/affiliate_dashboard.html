@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 30px;
+        }
+
+        /* Cards */
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #0071ce;
+            color: white;
+            font-weight: 700;
+        }
+
+        .overview-card {
+            border-left: 5px solid #0071ce;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: #0071ce;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #005f8c;
+        }
+
+        /* Tabs */
+        .nav-tabs .nav-link.active {
+            background-color: #0071ce;
+            color: white;
+        }
+
+        .nav-tabs .nav-link {
+            color: #0071ce;
+        }
+
+        .tab-content {
+            margin-top: 20px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" style="height: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('buyer_routes.buyer_dashboard') }}">Buyer Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.marketplace') }}">Marketplace</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.settings') }}">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.logout') }}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.login') }}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.signup') }}">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Dashboard Tabs -->
+        <ul class="nav nav-tabs" id="affiliateDashboardTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Recent Activity</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab" aria-controls="tools" aria-selected="false">Marketing Tools</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="approved-products-tab" data-bs-toggle="tab" href="#approved-products" role="tab" aria-controls="approved-products" aria-selected="false">Approved Products</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="search-tab" data-bs-toggle="tab" href="#search" role="tab" aria-controls="search" aria-selected="false">Search & Filter</a>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="calculator-tab" data-bs-toggle="tab" data-bs-target="#calculator" type="button" role="tab" aria-controls="calculator" aria-selected="false">Calculator</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab" aria-controls="analysis" aria-selected="false">Analysis</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-3" id="affiliateDashboardTabsContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <div class="row">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card overview-card">
+                            <div class="card-header">Total Earnings</div>
+                            <div class="card-body text-center">
+                                <h4>${{ total_earnings }}</h4>
+                                <p>Last 30 days</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card overview-card">
+                            <div class="card-header">New Referrals</div>
+                            <div class="card-body text-center">
+                                <h4>{{ new_referrals }}</h4>
+                                <p>Signups this month</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card overview-card">
+                            <div class="card-header">Pending Commissions</div>
+                        <div class="card-body text-center">
+                                <h4>${{ pending_commissions }}</h4>
+                                <p>Pending payouts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card overview-card">
+                            <div class="card-header">Active Campaigns</div>
+                            <div class="card-body text-center">
+                                <h4>{{ active_campaigns }}</h4>
+                                <p>Ongoing promotions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- New Card for Affiliate Code -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card overview-card">
+                            <div class="card-header">Your Affiliate Code</div>
+                            <div class="card-body text-center">
+                                <h4>{{ affiliate_code }}</h4> <!-- Display Affiliate Code -->
+                                <p>Share this code to start earning commissions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Tab -->
+            <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                <div class="card">
+                    <div class="card-header">Recent Activity</div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            {% for referral in referrals %}
+                                <li class="d-flex justify-content-between">
+                                    <span>You earned ${{ referral.commission }} for a successful referral (Product ID: {{ referral.product_id }}).</span>
+                                    <span>{{ referral.timestamp }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" class="btn btn-primary btn-sm">View All Activity</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketing Tools Tab -->
+            <div class="tab-pane fade" id="tools" role="tabpanel" aria-labelledby="tools-tab">
+                <div class="card">
+                    <div class="card-header">Marketing Tools</div>
+                    <div class="card-body">
+                        <h5>Affiliate Link Generator</h5>
+                        <div class="input-group mb-3">
+                            <input type="number" id="productIdInput" class="form-control" placeholder="Enter Product ID">
+                            <button class="btn btn-primary" onclick="generateReferralLink()">Generate Link</button>
+                        </div>
+                        <input type="text" id="referralLink" class="form-control" readonly>
+                        <button class="btn btn-success mt-2" onclick="copyReferralLink()">Copy Link</button>
+
+                        <!-- Social Media Share Buttons -->
+                        {% if products.items %}
+                            {% set referral_link = url_for('affiliate_routes.generate_referral_link', product_id=products.items[0].id, _external=True) %}
+                        {% else %}  
+                            {% set referral_link = '' %}
+                        {% endif %}
+
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ referral_link }}" target="_blank">
+                            <img src="/static/icons/facebook.png" alt="Share on Facebook">
+                        </a>
+
+                        <a href="https://twitter.com/intent/tweet?url={{ referral_link }}&text=Check this out!" target="_blank">
+                            <img src="/static/icons/twitter.png" alt="Share on X">
+                        </a>
+
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ referral_link }}" target="_blank">
+                            <img src="/static/icons/linkedin.png" alt="Share on LinkedIn">
+                        </a>
+
+                        <a href="https://api.whatsapp.com/send?text=Check this out! {{ referral_link }}" target="_blank">
+                            <img src="/static/icons/whatsapp.png" alt="Share on WhatsApp">
+                        </a>
+
+                        <a href="https://www.instagram.com" target="_blank">
+                            <img src="/static/icons/instagram.png" alt="Share on Instagram">
+                        </a>
+            
+                        <h5 class="mt-4">Promotional Banners</h5>
+                        <ul>
+                            <li><a href="#">Download Banner 1</a></li>
+                            <li><a href="#">Download Banner 2</a></li>
+                        </ul>
+            
+                        <h5 class="mt-4">Email Templates</h5>
+                        <ul>
+                            <li><a href="#">Affiliate Email Template 1</a></li>
+                            <li><a href="#">Affiliate Email Template 2</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function generateReferralLink() {
+                    let productId = document.getElementById("productIdInput").value;
+                    if (!productId) {
+                        alert("Please enter a Product ID.");
+                        return;
+                    }
+
+                    fetch(`/affiliate/generate_link/${productId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                document.getElementById("referralLink").value = data.referral_link;
+                            }
+                        })
+                        .catch(error => console.error("Error generating referral link:", error));
+                }
+
+                function copyReferralLink() {
+                    let referralInput = document.getElementById("referralLink");
+                    referralInput.select();
+                    document.execCommand("copy");
+                    alert("Referral link copied to clipboard!");
+                }
+            </script>
+
+            <!-- Approved Products Tab -->
+            <div class="tab-pane fade" id="approved-products" role="tabpanel" aria-labelledby="approved-products-tab">
+                <div class="row g-3">
+                    {% for product in approved_products %}
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <a href="{{ url_for('seller_routes.product_details', product_id=product.id) }}" class="text-decoration-none">
+                                <img src="{{ product.images[0].image_url.replace('\\', '/') if product.images else url_for('static', filename='default_image.jpg') }}" alt="{{ product.name }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text text-muted">{{ product.description[:50] }}...</p>
+                                    <p class="card-text"><strong>GHS {{ product.price }}</strong></p>
+
+                                    {% if product.category %}
+                                        <p class="card-text"><strong>Category:</strong> {{ product.category }}</p>
+                                    {% endif %}
+
+                                    {% if product.brand %}
+                                        <p class="card-text"><strong>Brand:</strong> {{ product.brand }}</p>
+                                    {% endif %}
+
+                                    {% if product.condition %}
+                                        <p class="card-text"><strong>Condition:</strong> {{ product.condition }}</p>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if pagination.has_prev %}
+                        <li class="page-item">
+                            <a href="{{ url_for('affiliate_routes.affiliate_dashboard', page=pagination.prev_num) }}" class="page-link">Previous</a>
+                        </li>
+                        {% endif %}
+                        {% for page_num in pagination.iter_pages() %}
+                        {% if page_num %}
+                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                            <a href="{{ url_for('affiliate_routes.affiliate_dashboard', page=page_num) }}" class="page-link">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if pagination.has_next %}
+                        <li class="page-item">
+                            <a href="{{ url_for('affiliate_routes.affiliate_dashboard', page=pagination.next_num) }}" class="page-link">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Calculator Tab -->
+            <div class="tab-pane fade" id="calculator" role="tabpanel" aria-labelledby="calculator-tab">
+                <div class="card">
+                    <div class="card-header">Commission Calculator</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Commission Calculator -->
+                            <div class="col-md-6">
+                                <label for="productPrice" class="form-label">Product Price (GHS)</label>
+                                <input type="number" id="productPrice" class="form-control small-input mb-2" placeholder="Enter product price">
+
+                                <label for="commissionRate" class="form-label">Commission Rate (%)</label>
+                                <input type="number" id="commissionRate" class="form-control small-input mb-2" placeholder="Enter commission percentage">
+
+                                <button class="btn btn-primary w-100" onclick="calculateCommission()">Calculate Commission</button>
+                                <div id="commissionResult" class="mt-3 text-center"></div>
+                            </div>
+
+                            <!-- Physical Calculator -->
+                            <div class="col-md-6">
+                                <div class="calculator-container">
+                                    <input type="text" id="calcDisplay" class="form-control text-end mb-2" disabled>
+
+                                    <div class="calculator-buttons">
+                                        <button onclick="clearCalc()">C</button>
+                                        <button onclick="appendCalc('/')">/</button>
+                                        <button onclick="appendCalc('*')">*</button>
+                                        <button onclick="appendCalc('-')">-</button>
+
+                                        <button onclick="appendCalc('7')">7</button>
+                                        <button onclick="appendCalc('8')">8</button>
+                                        <button onclick="appendCalc('9')">9</button>
+                                        <button onclick="appendCalc('+')">+</button>
+
+                                        <button onclick="appendCalc('4')">4</button>
+                                        <button onclick="appendCalc('5')">5</button>
+                                        <button onclick="appendCalc('6')">6</button>
+                                        <button onclick="calculateResult()">=</button>
+
+                                        <button onclick="appendCalc('1')">1</button>
+                                        <button onclick="appendCalc('2')">2</button>
+                                        <button onclick="appendCalc('3')">3</button>
+                                        <button onclick="appendCalc('0')" class="zero-btn">0</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSS Styles -->
+            <style>
+                .small-input {
+                    width: 70%;
+                    margin: auto;
+                    display: block;
+                }
+
+                .calculator-container {
+                    background: #f1f1f1;
+                    padding: 15px;
+                    border-radius: 8px;
+                    text-align: center;
+                }
+
+                .calculator-buttons button {
+                    width: 23%;
+                    margin: 2px;
+                    padding: 10px;
+                    font-size: 18px;
+                    border: none;
+                    background: #0071ce;
+                    color: white;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                .calculator-buttons button:hover {
+                    background: #005f8c;
+                }
+
+                .zero-btn {
+                    width: 48%;
+                }
+            </style>
+
+            <!-- JavaScript -->
+            <script>
+                function calculateCommission() {
+                    let price = parseFloat(document.getElementById("productPrice").value) || 0;
+                    let commissionRate = parseFloat(document.getElementById("commissionRate").value) || 0;
+                    let commissionAmount = (price * commissionRate) / 100;
+
+                    document.getElementById("commissionResult").innerHTML = 
+                        `<strong>Commission Earned: GHS ${commissionAmount.toFixed(2)}</strong>`;
+                }
+
+                let calcExpression = "";
+
+                function appendCalc(value) {
+                    calcExpression += value;
+                    document.getElementById("calcDisplay").value = calcExpression;
+                }
+
+                function clearCalc() {
+                    calcExpression = "";
+                    document.getElementById("calcDisplay").value = "";
+                }
+
+                function calculateResult() {
+                    try {
+                        document.getElementById("calcDisplay").value = eval(calcExpression);
+                    } catch {
+                        document.getElementById("calcDisplay").value = "Error";
+                    }
+                    calcExpression = "";
+                }
+            </script>
+
+            <!-- Analysis Tab -->
+            <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
+                <div class="card">
+                    <div class="card-header">Analysis</div>
+                    <div class="card-body">
+                        <p>Analytics content goes here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <script>
+        function performSearch() {
+    let query = document.getElementById("searchQuery").value;
+    let category = document.getElementById("searchCategory").value;
+    
+    fetch(`/affiliate/affiliate_search?query=${query}&category=${category}`)
+        .then(response => response.json())
+        .then(data => {
+            let resultDiv = document.getElementById("searchResults");
+            resultDiv.innerHTML = "";  // Clear previous results
+            
+            if (data.length === 0) {
+                resultDiv.innerHTML = "<p class='text-danger text-center'>No results found.</p>";
+                return;
+            }
+
+            let resultHTML = `<div class="row g-4">`;
+            data.forEach(product => {
+                resultHTML += `
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <div class="card h-100 shadow-sm">
+                            <img src="${product.image_url}" alt="${product.name}" class="card-img-top" style="object-fit: cover; height: 200px;">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">${product.name}</h5>
+                                <p class="card-text text-truncate" title="${product.description}">${product.description}</p>
+                                <p class="card-text"><strong>Price:</strong> ₵${product.price}</p>
+                                <p class="card-text"><strong>Category:</strong> ${product.category}</p>
+                                <p class="card-text"><strong>Commission:</strong> ${product.commission || 'No Commission'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            resultHTML += "</div>";
+
+            resultDiv.innerHTML = resultHTML;
+        })
+        .catch(error => console.error("Error fetching search results:", error));
+}
+
+    </script>
+</body>
+</html>

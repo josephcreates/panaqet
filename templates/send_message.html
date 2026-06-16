@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Message</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="send-message-container">
+        <h2>Send a Message</h2>
+        <form method="POST" action="{{ url_for('routes.send_message', receiver_id=receiver_id) }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control", placeholder="Write your message here...") }}
+            </div>
+            <div class="form-group">
+                {{ form.recaptcha }}
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>

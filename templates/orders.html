@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .order-card {
+            margin: 10px 0;
+        }
+        .order-status {
+            font-weight: bold;
+            color: #17a2b8;
+        }
+        .order-details {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Your Orders</h1>
+
+        {% if orders %}
+            <div class="row">
+                {% for order in orders %}
+                    <div class="col-md-4">
+                        <div class="card order-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Order #{{ order.id }}</h5>
+                                <p class="order-status">Status: {{ order.status }}</p>
+                                <div class="order-details">
+                                    <p><strong>Order Date:</strong> {{ order.created_at.strftime('%Y-%m-%d') }}</p>
+                                    <p><strong>Total Amount:</strong> ${{ order.total_amount }}</p>
+                                </div>
+                                <a href="{{ url_for('buyer_routes.order_details', order_id=order.id) }}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">You have no orders yet.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<div class="tab-pane fade" id="v-pills-product-management" role="tabpanel" aria-labelledby="v-pills-product-management-tab">
+    <h4>Product Management</h4>
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-md-5 col-lg-4 mb-5">
+                    <div class="card h-100 shadow-sm border-0">
+                        <!-- Check if the product has images -->
+                        {% if product.images %}
+                            {% set image_path = product.images[0].image_url.replace('\\', '/') %}
+                            <img src="{{ image_path }}" class="card-img-top" alt="{{ product.name }}" style="object-fit: cover; width: 100%; height: 250px; border-radius: 10px 10px 0 0;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='default_image.jpg') }}" class="card-img-top" alt="{{ product.name }}" style="object-fit: cover; width: 100%; height: 250px; border-radius: 10px 10px 0 0;">
+                        {% endif %} 
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">{{ product.name }}</h5>
+                            <p class="card-text text-truncate">{{ product.description[:100] }}...</p>
+                            <p class="card-text text-muted">Category: {{ product.category }}</p>
+                            <p class="card-text fw-bold">Price: ₵{{ product.price }}</p>
+                            <p class="card-text text-info">
+                                Seller Commission Rate: {{ product.seller.commission_rate }}%<br>
+                                Product-Specific Commission Rate: {{ product.commission_rate or 'N/A' }}%
+                            </p>
+                            <div class="mb-3">
+                                <form action="{{ url_for('admin_routes.update_commission', product_id=product.id) }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <label for="commission_rate_{{ product.id }}" class="form-label">Set Product-Specific Commission (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" step="0.01" min="0" class="form-control" name="commission_rate" id="commission_rate_{{ product.id }}" value="{{ product.commission_rate }}">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <form action="{{ url_for('admin_routes.approve_product', product_id=product.id) }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-success">Approve Product</button>
+                                </form>
+                                
+                                <form action="{{ url_for('admin_routes.reject_product', product_id=product.id) }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                </form>
+                            </div>
+                            <a href="{{ url_for('admin_routes.admin_view_product', product_id=product.id) }}" class="btn btn-primary btn-sm btn-block mt-3">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No products available.</p>
+        {% endif %}
+    </div>
+</div>

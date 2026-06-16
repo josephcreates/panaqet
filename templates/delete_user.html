@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Delete User</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Delete User</h2>
+        <p>Are you sure you want to delete the user <strong>{{ user.username }}</strong>?</p>
+        
+        <form method="POST" action="{{ url_for('routes.admin_confirm_delete_user', user_id=user.id) }}">
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a href="{{ url_for('routes.admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

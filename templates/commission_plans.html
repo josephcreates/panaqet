@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Performance Dashboard</title>
+    <!-- Bootstrap and FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #0071ce;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #005f8c;
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #0071ce;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #0071ce;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #005f8c;
+        }
+
+        /* Custom Tabs */
+        .nav-tabs .nav-link.active {
+            background-color: #0071ce;
+            color: white;
+        }
+
+        .nav-tabs .nav-link {
+            color: #0071ce;
+        }
+
+        .tab-content {
+            margin-top: 20px;
+        }
+
+        .overview-card {
+            border-left: 5px solid #0071ce;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="text-center">
+        <h3>Affiliate Performance Dashboard</h3>
+    </div>
+    <ul class="nav flex-column px-2">
+        <li class="nav-item">
+            <a class="nav-link active" href="#overview" data-bs-toggle="pill">
+                <i class="fas fa-tachometer-alt"></i> Overview
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#manage" data-bs-toggle="pill">
+                <i class="fas fa-cogs"></i> Manage Commission Plans
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#existing" data-bs-toggle="pill">
+                <i class="fas fa-list"></i> Existing Commission Plans
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#affiliates" data-bs-toggle="pill">
+                <i class="fas fa-users"></i> Monitor Affiliates
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <!-- Dashboard Tabs -->
+    <ul class="nav nav-tabs" id="commissionTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
+                Overview
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="manage-tab" data-bs-toggle="tab" data-bs-target="#manage" type="button" role="tab" aria-controls="manage" aria-selected="false">
+                Manage Commission Plans
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="existing-tab" data-bs-toggle="tab" data-bs-target="#existing" type="button" role="tab" aria-controls="existing" aria-selected="false">
+                Existing Plans
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="affiliates-tab" data-bs-toggle="tab" data-bs-target="#affiliates" type="button" role="tab" aria-controls="affiliates" aria-selected="false">
+                Monitor Affiliates
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3" id="commissionTabsContent">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="row">
+                <!-- Quick Stats Overview (Example) -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card overview-card">
+                        <div class="card-header">Total Earnings</div>
+                        <div class="card-body text-center">
+                            <h4>${{ total_earnings }}</h4>
+                            <p>Last 30 days</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- More Overview Stats Here -->
+            </div>
+        </div>
+
+        <!-- Manage Commission Plans Tab -->
+        <div class="tab-pane fade" id="manage" role="tabpanel" aria-labelledby="manage-tab">
+            <h3>Manage Your Commission Plans</h3>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    <label for="plan_name" class="form-label">Commission Plan Name</label>
+                    {{ form.plan_name() }}
+                </div>
+                <div class="mb-3">
+                    <label for="commission_rate" class="form-label">Commission Rate (%)</label>
+                    {{ form.commission_rate() }}
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    {{ form.description() }}
+                </div>
+                <button type="submit" class="btn btn-primary">Create Commission Plan</button>
+            </form>
+        </div>
+
+        <!-- Existing Commission Plans Tab -->
+        <div class="tab-pane fade" id="existing" role="tabpanel" aria-labelledby="existing-tab">
+            <h3>Your Existing Commission Plans</h3>
+            <form method="POST" action="{{ url_for('seller_routes.attach_commission_plan') }}">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    <label for="plan_id" class="form-label">Select Commission Plan</label>
+                    <select id="plan_id" name="plan_id" class="form-select">
+                        {% for plan in commission_plans %}
+                            <option value="{{ plan.id }}">{{ plan.plan_name }} ({{ plan.commission_rate }}%)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="product_ids" class="form-label">Select Products</label>
+                    <select id="product_ids" name="product_ids" class="form-select" multiple>
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Attach Commission Plan</button>
+            </form>            
+        </div>
+
+        <!-- Monitor Affiliates Tab -->
+        <div class="tab-pane fade" id="affiliates" role="tabpanel" aria-labelledby="affiliates-tab">
+            <h3>Monitor Your Affiliates' Performance</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Affiliate Name</th>
+                        <th scope="col">Total Sales</th>
+                        <th scope="col">Commission Earned</th>
+                        <th scope="col">Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for affiliate in affiliates %}
+                        <tr>
+                            <td>{{ affiliate.name }}</td>
+                            <td>{{ affiliate.total_sales }}</td>
+                            <td>${{ affiliate.commission_earned }}</td>
+                            <td>
+                                {% if affiliate.performance > 80 %}
+                                    <span class="badge bg-success">Excellent</span>
+                                {% elif affiliate.performance > 50 %}
+                                    <span class="badge bg-warning">Good</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Needs Improvement</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS, Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    // Initialize Select2 for multi-select dropdown
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#product_ids').select2({
+            placeholder: "Select products to attach",
+            allowClear: true
+        });
+    });
+</script>
+</body>
+</html>

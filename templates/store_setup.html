@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Your Store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff7eb3, #ff758c, #ff6e70);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        header {
+            background-color: #f76b8a;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .form-container {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="file"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+        button {
+            background-color: #ff6e70;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #ff3b4c;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 14px;
+        }
+        #image_preview {
+            margin-top: 10px;
+            max-width: 100px;
+            max-height: 100px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>Setup Your Store</header>
+        <div class="form-container">
+            <form action="{{ url_for('seller_routes.store_setup') }}" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.store_name.label }}
+                    {{ form.store_name(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.store_description.label }}
+                    {{ form.store_description(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.store_logo.label }}
+                    {{ form.store_logo(class="form-control", onchange="previewImage(event)") }}
+                </div>
+                <img id="image_preview" alt="Image Preview">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>            
+        </div>
+        <footer>&copy; 2024 PanaQet - All rights reserved.</footer>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            const preview = document.getElementById('image_preview');
+
+            if (file) {
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                };
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

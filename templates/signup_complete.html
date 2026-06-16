@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Video Background Styles */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        /* Ensure content is readable over the video */
+        body {
+            background: rgba(0, 0, 0, 0.5); /* Fallback background color */
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+        }
+    
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            padding: 0 15px;
+        }
+    
+        .card {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent card */
+            border: none;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+    
+        h2 {
+            font-weight: bold;
+            color: #333;
+        }
+    
+        .btn-primary, .btn-secondary, .btn-danger {
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+    
+        .btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
+            transform: scale(1.05);
+        }
+    
+        video, canvas {
+            border-radius: 15px;
+            border: 2px solid #ccc;
+            max-width: 100%; /* Constrain video width */
+            height: auto;    /* Maintain aspect ratio */
+        }
+
+        .preview-image {
+            max-width: 100px; /* Reduce the width */
+            max-height: 90px; /* Reduce the height */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px; /* Add spacing */
+            object-fit: cover; /* Maintain aspect ratio and fit within the container */
+        }
+    </style>    
+</head>
+
+<body>
+    <!-- Video Background -->
+    <video class="video-bg" src="../static/20450812-sd_960_540_30fps.mp4" autoplay loop muted></video>
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Notice Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card p-4" >
+                    <h5 class="card-title text-center" style="color: #333;">Notice</h5>
+                    <p style="color: #333;">
+                        Please ensure all fields are filled out correctly. Sellers must upload both the front and back of their ID cards.
+                    </p>
+                    <p style="color: #333;">
+                        Failure to complete this step may result in access issues.
+                    </p>
+                </div>
+            </div>
+            <!-- Form Card -->
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h2 class="text-center mb-4">Complete Signup</h2>
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('routes.signup_complete') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <!-- ID Type Selection -->
+                        <div class="mb-3">
+                            <label for="id_type" class="form-label" style="color: black;">ID Type</label>
+                            <select name="id_type" id="id_type" class="form-control" required>
+                                <option value="">Select ID Type</option>
+                                <option value="Passport">Passport</option>
+                                <option value="Driver's License">Driver's License</option>
+                                <option value="National ID">National ID</option>
+                            </select>
+                        </div>
+                        <!-- ID Front Section -->
+                        <div class="mb-3">
+                            <label for="id_front" class="form-label" style="color: black;">ID Card Front (Required for Sellers)</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#cameraModalFront">
+                                    Open Camera
+                                </button>
+                                <input type="file" name="id_front" id="id_front" class="form-control" accept="image/*">
+                            </div>
+                            <div id="id_front_preview" class="mt-3 text-center"></div>
+                        </div>
+                        <!-- ID Back Section -->
+                        <div class="mb-3">
+                            <label for="id_back" class="form-label" style="color: black;">ID Card Back (Required for Sellers)</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#cameraModalBack">
+                                    Open Camera
+                                </button>
+                                <input type="file" name="id_back" id="id_back" class="form-control" accept="image/*">
+                            </div>
+                            <div id="id_back_preview" class="mt-3 text-center"></div>
+                        </div>
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <!-- Camera Modal Front -->
+    <div class="modal fade" id="cameraModalFront" tabindex="-1" aria-labelledby="cameraModalFrontLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cameraModalFrontLabel">Capture ID Front</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <video id="video-front" autoplay></video>
+                    <canvas id="canvas-front" class="d-none"></canvas>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-danger" onclick="captureImage('front')">Capture</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearCapture('front')">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Modal Back -->
+    <div class="modal fade" id="cameraModalBack" tabindex="-1" aria-labelledby="cameraModalBackLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cameraModalBackLabel">Capture ID Back</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <video id="video-back" autoplay></video>
+                    <canvas id="canvas-back" class="d-none"></canvas>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-danger" onclick="captureImage('back')">Capture</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearCapture('back')">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" style="margin-top: 130px;">
+        Please ensure you complete all required fields before leaving this page. Otherwise, you will need to log in again to finish your profile setup.
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/signup_complete.js"></script>
+</body>
+</html>
