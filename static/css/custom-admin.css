@@ -1,0 +1,36 @@
+/* Custom styles for Admin Dashboard */
+.custom-nav-pills .nav-link {
+    color: #495057;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+    margin-right: 10px;
+}
+
+.custom-nav-pills .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.custom-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    transition: transform 0.2s;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #dee2e6;
+}
+
+.custom-table thead {
+    background-color: #f8f9fa;
+}
+
+.custom-table tbody tr:hover {
+    background-color: #f1f1f1;
+}

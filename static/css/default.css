@@ -1,0 +1,31 @@
+/* Light Theme */
+body {
+    background-color: #f8f9fa;
+    color: #212529;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.navbar-brand, .nav-link {
+    color: #007bff;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #212529;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.footer a {
+    color: #007bff;
+}
+
+.footer a:hover {
+    color: #0056b3;
+}

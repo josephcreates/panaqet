@@ -1,0 +1,262 @@
+/* General Layout and Font Styling */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f8f9fa;
+    overflow-x: hidden;
+}
+
+/* Fixed Navbar Styling */
+.navbar {
+    z-index: 1050; /* Ensures navbar is above other elements */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 56px; /* Adjust height as needed */
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 222px;
+    position: fixed;
+    top: 56px; /* Aligns the sidebar just below the navbar */
+    bottom: 0;
+    left: 0;
+    background-color: #ff8800;
+    color: white;
+    padding: 5px;
+    overflow-y: none;
+    transition: width 0.3s ease;
+}        
+
+/* Collapsed Sidebar */
+.sidebar.collapsed {
+    width: 40px;
+}
+
+/* Hide link text in collapsed sidebar */
+.sidebar.collapsed .link-text {
+    display: none; /* Hides text when sidebar is collapsed */
+}
+
+/* When Sidebar is Collapsed */
+.sidebar.collapsed .nav-link {
+    justify-content: center; /* Center-align icons in collapsed state */
+    padding: 5px 0; /* Reduced padding for compactness */
+}
+
+.sidebar-title {
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+/* Sidebar Links */
+.sidebar .nav-link {
+    color: #ffffff;
+    font-size: 1rem;
+    margin: 8px 0;
+    padding: 5px 10px; /* Added left-right padding for better alignment */
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: left;
+    justify-content: left; /* Centers icon when sidebar is collapsed */
+}
+
+/* Add spacing between sidebar icons and text */
+.sidebar .nav-link i {
+    margin-right: 10px; /* Adjust this value as needed */
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background-color: #0056b3;
+    font-weight: 300;
+    width: 100%; /* Ensure background color fills the sidebar width */
+    border-radius: 5px; /* Adjusted radius for consistency */
+}
+
+/* Adjust Main Content to Account for Sidebar and Navbar */
+.main {
+    margin-left: 100px; /* Offset for sidebar width */
+    padding: 80px 20px 20px; /* Offset top padding for fixed navbar */
+    background-color: #ccc7c7b6;
+    min-height: 100vh; /* Minimum height set to full viewport */
+    transition: margin-left 0.3s ease;
+}
+
+/* Adjust Main Content when Sidebar is Collapsed */
+.main.collapsed {
+    margin-left: 8px;
+}
+
+.tab-pane h4 {
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+/* Card Styling */
+.card {
+    margin-bottom: 20px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    flex-grow: 1;
+    width: 250px;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card-body {
+    padding: 15px;
+    text-align: center;
+    width: 210px;
+}
+
+/* Table Styling */
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+}
+
+.table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Button Styling */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #1014ec;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggler {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.sidebar-toggler i {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+/* CSS for the switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #4CAF50;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(14px);
+}

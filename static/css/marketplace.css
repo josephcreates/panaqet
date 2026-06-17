@@ -1,0 +1,130 @@
+
+    /* Reduce the margin between filter elements */
+    .mb-3 {
+        margin-bottom: 2 rem;  /* Adjust this value to your preference */
+    }
+
+    .card-body {
+        padding: 0.5rem;  /* Adjust the padding to reduce space */
+        color: #002fff;
+    }
+
+    /* Reduce the space around form elements inside the filters */
+    .form-label {
+        margin-bottom: 0.25rem;  /* Adjust label space */
+    }
+
+    .form-select, .form-control {
+        margin-bottom: 0.5rem;  /* Adjust input/select space */
+    }
+
+    /* Ensure the watermark stays independent of other elements */
+    .watermark {
+        position: fixed; /* Fixed position for consistent placement even when scrolling */
+        top: 50%; /* Center vertically relative to the viewport */
+        left: 50%; /* Center horizontally relative to the viewport */
+        transform: translate(-50%, -50%);
+        opacity: 0.1; /* Adjust transparency */
+        z-index: -1; /* Always behind other content */
+        pointer-events: none; /* Prevent interference with interactions */
+        width: 50%; /* Adjust size relative to viewport */
+        max-width: 500px; /* Set a max size for larger screens */
+    }
+
+    .custom-filter-card {
+        background-color: #f8f9fa; /* Light gray */
+        border: 1px solid #ced4da; /* Light border */
+        color: #03182c; /* Text color */
+    }
+
+    .custom-filter-card .card-header {
+        background-color: #007bff; /* Change the header color */
+        color: #fff; /* White text */
+    }
+
+    /* For small screens (phones) */
+    @media (max-width: 767px) {
+        /* Adjust the sidebar filters */
+        aside.col-md-3 {
+            width: 100%; /* Make filter section take full width */
+            margin-bottom: 1rem; /* Add some space below filters */
+        }
+
+        /* Adjust product listings */
+        section.col-md-9 {
+            width: 100%; /* Make product listing section take full width */
+        }
+
+        /* Stack product cards in a single column */
+        .row.g-3 {
+            display: block; /* Stack products vertically */
+        }
+
+        /* Make each product card take full width */
+        .col-md-4 {
+            width: 100%; /* Ensure product cards are full width */
+            margin-bottom: 1rem; /* Space between product cards */
+        }
+
+        /* Navbar adjustments */
+        .navbar-collapse {
+            text-align: center; /* Align the navbar links to the center */
+        }
+
+        .navbar-nav {
+            width: 100%; /* Make navbar items span the full width */
+        }
+
+        .navbar-nav .nav-item {
+            width: 100%; /* Make nav items take full width */
+            text-align: center; /* Center align nav items */
+        }
+
+        /* Adjust the filter form */
+        .form-check-label {
+            font-size: 0.9rem; /* Adjust the font size for smaller screens */
+        }
+
+        /* Adjust the card title size */
+        .card-title {
+            font-size: 1rem; /* Make card titles smaller */
+        }
+
+        /* Adjust the card image height */
+        .card-img-top {
+            height: 180px; /* Reduce the height of images on smaller screens */
+        }
+
+        /* Adjust spacing around form elements */
+        .form-select, .form-control {
+            font-size: 0.9rem; /* Smaller font size for inputs */
+        }
+
+        /* Adjust pagination */
+        .pagination {
+            font-size: 0.9rem; /* Reduce font size of pagination items */
+        }
+    }
+
+    /* For extra small screens (phones in portrait mode) */
+    @media (max-width: 480px) {
+        /* Further adjust the navbar */
+        .navbar-brand img {
+            height: 30px; /* Reduce logo size */
+        }   
+
+        /* Adjust card body padding */
+        .card-body {
+            padding: 0.3rem; /* Reduce padding for smaller cards */
+        }
+
+        /* Make the filter form inputs full width */
+        .form-select, .form-control {
+            width: 100%; /* Make form inputs full width */
+        }
+
+        /* Adjust the buttons */
+        .btn {
+            font-size: 0.8rem; /* Make buttons smaller */
+        }
+    }

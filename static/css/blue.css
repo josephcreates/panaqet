@@ -1,0 +1,31 @@
+/* Blue Theme */
+body {
+    background-color: #a3bfdb;
+    color: #0e7be7;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #007bff;
+}
+
+.footer {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.footer a {
+    color: #ffffff;
+}
+
+.footer a:hover {
+    color: #0056b3;
+}
