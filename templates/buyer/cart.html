@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <title>Your Cart</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .btn {
+            border-radius: 20px;
+        }
+
+        .btn-danger, .btn-warning {
+            transition: all 0.3s;
+        }
+
+        .btn-danger:hover, .btn-warning:hover {
+            opacity: 0.8;
+        }
+
+        .cart-summary {
+            text-align: right;
+        }
+
+        h2, h4 {
+            color: #333;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .modal-footer .btn {
+            border-radius: 15px;
+        }
+
+        /* Ensure the watermark stays independent of other elements */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            width: 50%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Your Cart <span class="text-muted">(Buyer Only)</span></h2>
+        {% if cart_items %}
+            <div class="table-responsive">
+                <table class="table align-middle table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Product</th>
+                            <th>Unit Price (₵)</th>
+                            <th>Quantity</th>
+                            <th>Total Price (₵)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.product.name if item.product else 'No product' }}</td>
+                            <td>₵{{ item.product.price if item.product else 0 }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₵{{ item.product.price * item.quantity if item.product else 0 }}</td>
+                            <td>
+                                <form action="{{ url_for('buyer_routes.remove_from_cart', cart_id=item.id) }}" method="post" class="d-inline remove-item-form">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="button" class="btn btn-danger btn-sm open-remove-modal">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="cart-summary mt-4">
+                <h4>Total Amount: <strong>GH₵{{ total_amount }}</strong></h4>
+                <form action="{{ url_for('buyer_routes.place_order') }}" method="post" id="place-order-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </form>                
+                <button class="btn btn-warning mt-3" id="open-clear-cart-modal">Clear Cart</button>
+            </div>            
+        {% else %}
+            <p class="text-center text-muted mt-4">Your cart is empty.</p>
+        {% endif %}
+    </div>
+
+    <!-- Modal for Removing Item -->
+    <div class="modal fade" id="removeItemModal" tabindex="-1" aria-labelledby="removeItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeItemModalLabel">Confirm Removal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove this item from your cart?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm-remove-btn">Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Clearing Cart -->
+    <div class="modal fade" id="clearCartModal" tabindex="-1" aria-labelledby="clearCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearCartModalLabel">Confirm Clear Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to clear all items from your cart?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('buyer_routes.clear_cart') }}" method="post" id="clear-cart-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-warning">Clear All</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Open modal for item removal
+        document.querySelectorAll('.open-remove-modal').forEach(button => {
+            button.addEventListener('click', function () {
+                const removeForm = this.closest('form');
+                const modal = new bootstrap.Modal(document.getElementById('removeItemModal'));
+                document.getElementById('confirm-remove-btn').addEventListener('click', function () {
+                    removeForm.submit();
+                });
+                modal.show();
+            });
+        });
+
+        // Open modal for clearing cart
+        document.getElementById('open-clear-cart-modal').addEventListener('click', function () {
+            const modal = new bootstrap.Modal(document.getElementById('clearCartModal'));
+            modal.show();
+        });
+
+        // Confirm clearing cart
+        document.getElementById('confirm-clear-btn').addEventListener('click', function () {
+            document.getElementById('clear-cart-form').submit();
+        });
+
+        // Function to calculate total amount
+        function calculateTotalAmount() {
+            let total = 0;
+            const rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                const totalPriceCell = row.querySelector("td:nth-child(4)");
+                if (totalPriceCell) {
+                    const price = parseFloat(totalPriceCell.textContent.replace(/[₵,]/g, "")) || 0;
+                    total += price;
+                }
+            });
+            document.querySelector(".cart-summary h4").innerHTML = `Total Amount: <strong>GH₵${total.toFixed(2)}</strong>`;
+        }
+
+        // Call the function to calculate the total amount when the page loads
+        window.onload = calculateTotalAmount;
+    </script>
+
+    <!-- Watermark Image -->
+    <img src="../static/icon.png" alt="Watermark" class="watermark">
+</body>
+</html>

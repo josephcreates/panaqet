@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Page Not Found - 404
+{% endblock %}
+
+{% include 'chat_widget.html' %}
+
+
+{% block content %}
+    <div class="container text-center" style="margin-top: 50px;">
+        <h1 class="display-3">404</h1>
+        <h2>Oops! The page you're looking for doesn't exist.</h2>
+        <p class="lead">It seems like the page you're trying to reach is either unavailable or doesn't exist anymore.</p>
+        <p>Check the URL or head back to the homepage.</p>
+        <a href="{{ url_for('buyer_routes.checkout') }}" class="btn btn-primary btn-lg mt-3">Back to Checkout</a>
+        <br><br>
+        <img src="{{ url_for('static', filename='error.jpeg') }}" alt="404 Error Image" class="img-fluid" style="max-width: 100px;">
+    </div>
+{% endblock %}

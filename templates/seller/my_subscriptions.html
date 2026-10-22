@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subscriptions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJxK6RiA+6zYzDZyxX+a+bm0aGf2F0iNG2m6ONdGMK4zYWpzFyt23Q9Z3Gg1" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .subscription-card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+        }
+        .subscription-card .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1.1rem;
+        }
+        .card-footer {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 40px;
+        }
+        .expired {
+            color: red;
+        }
+        .active {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">My Subscriptions</h1>
+        
+        <div class="list-group">
+            {% if subscriptions %}
+                {% for subscription in subscriptions %}
+                    <div class="subscription-card card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ subscription.name }}</h5>
+                            <p class="card-text">{{ subscription.description }}</p>
+                            
+                            <!-- Features Section -->
+                            <ul class="list-group mt-3">
+                                {% if subscription.name == "Basic Plan" %}
+                                    <li class="list-group-item">List up to 10 products</li>
+                                    <li class="list-group-item">Limited support (email only)</li>
+                                    <li class="list-group-item">Basic analytics (views and clicks)</li>
+                                {% elif subscription.name == "Standard Plan" %}
+                                    <li class="list-group-item">List up to 50 products</li>
+                                    <li class="list-group-item">Priority placement in search results</li>
+                                    <li class="list-group-item">Advanced analytics (views, clicks, and conversions)</li>
+                                    <li class="list-group-item">Email and chat support</li>
+                                {% elif subscription.name == "Premium Plan" %}
+                                    <li class="list-group-item">Unlimited product listings</li>
+                                    <li class="list-group-item">Promoted products in top categories</li>
+                                    <li class="list-group-item">Full analytics suite</li>
+                                    <li class="list-group-item">Dedicated account manager</li>
+                                {% elif subscription.name == "Seasonal Boost Plan" %}
+                                    <li class="list-group-item">Highlighted placement during high-traffic periods</li>
+                                    <li class="list-group-item">List up to 20 additional seasonal products</li>
+                                    <li class="list-group-item">Optional social media promotions</li>
+                                {% elif subscription.name == "Enterprise Plan" %}
+                                    <li class="list-group-item">Unlimited product listings</li>
+                                    <li class="list-group-item">Personalized promotions</li>
+                                    <li class="list-group-item">Custom analytics and insights</li>
+                                    <li class="list-group-item">Multi-user access for large teams</li>
+                                    <li class="list-group-item">API access for integration</li>
+                                {% elif subscription.name == "Trial Plan" %}
+                                    <li class="list-group-item">List up to 5 products</li>
+                                    <li class="list-group-item">Basic analytics (views and clicks)</li>
+                                {% elif subscription.name == "Pay-Per-Feature Plan" %}
+                                    <li class="list-group-item">Flexible add-on features</li>
+                                    <li class="list-group-item">Base plan benefits</li>
+                                    <li class="list-group-item">Custom pricing for extra features</li>
+                                {% endif %}
+                            </ul>
+    
+                            <p class="card-footer mt-3">
+                                Subscribed on: 
+                                {% if subscription.seller_subscriptions %}
+                                    {{ subscription.seller_subscriptions[0].subscribed_on.strftime('%Y-%m-%d') }}<br>
+                                    Validity: 
+                                    {% set end_date = subscription.seller_subscriptions[0].valid_until %}
+                                    {% if end_date %}
+                                        {% set days_left = (end_date - current_date).days %}
+                                        {% if days_left > 0 %}
+                                            <span class="active">Active ({{ days_left }} days left)</span>
+                                        {% else %}
+                                            <span class="expired">Expired</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="expired">No validity date available</span>
+                                    {% endif %}
+                                {% else %}
+                                    No subscription found.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No subscriptions found.</p>
+            {% endif %}
+        </div>
+    </div>    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p8x7L4+DZLqOMa5l0qC1JztJr6yXbf97R2+ZLl8k7Wf9zF7" crossorigin="anonymous"></script>
+
+</body>
+</html>

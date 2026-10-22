@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+            min-height: 100vh; /* Use min-height instead of height */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* Allow scrolling for content that exceeds the viewport */
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Keep the video in the background */
+            background: url("../static/2915053-sd_960_540_25fps.mp4") no-repeat center center/cover;
+            /* Optional fallback if the video isn't supported */
+        }
+    
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the video covers the entire viewport */
+            z-index: -2; /* Ensure the video stays behind content */
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            padding: 0 15px;
+        }
+        .card {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding: 2rem; /* Increased padding */
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.7); /* White with 70% opacity */
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            font-size: 0.9rem;
+        }
+        .form-control {
+            font-size: 0.9rem;
+            border-radius: 10px;
+        }
+        .password-requirements {
+            font-size: 0.75rem;
+            color: #333333;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .password-requirements label {
+            display: inline-block;
+            margin-right: 15px;
+            white-space: nowrap;
+        }
+        /* Add style for green checkboxes */
+        .valid-label {
+            color: green; /* Turn label text green */
+            font-weight: bold;
+        }
+        .valid-checkbox {
+           accent-color: green; /* Make the checkbox green */
+        }
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            width: 25%;
+        }
+
+        .selected-country {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #fff;
+        }
+
+        .dropdown-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+                overflow-y: auto;
+            border: 1px solid #ccc;
+            background: #fff;
+            z-index: 1000;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .option img {
+            width: 16px;
+            margin-right: 8px;
+        }
+
+        .option:hover {
+            background-color: #f1f1f1;
+        }
+
+        .option span {
+            font-size: 0.9rem; /* Adjust the size of the country code */
+            display: inline-block;
+            width: 50px; /* Adjust width of the code display */
+            overflow: hidden;
+            text-overflow: ellipsis; /* If code is too long, use ellipsis */
+            white-space: nowrap; /* Prevent code from wrapping */
+    }
+
+        .btn-primary {
+            background-color: #2196f3;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            border-radius: 50px;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background-color: #1976d2;
+        }
+        input[type="checkbox"]:checked {
+            accent-color: #4CAF50;
+        }
+        .password-mismatch {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+         /* Left-side notice box styling */
+         .notice-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px; /* Increased padding */
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+            max-width: 450px; /* Increased width of the notice box */
+            margin-right: 30px; /* Add margin to right for spacing */
+        }
+
+.notice-box h4 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.notice-box ul {
+    font-size: 0.9rem;
+    color: #555;
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.notice-box a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.notice-box a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <video autoplay loop muted playsinline>
+        <source src="../static/istockphoto-1410302520-640_adpp_is.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container mt-1">
+    <div class="row">
+        <!-- Notice Section -->
+        <div class="col-md-4">
+            <div class="notice-box">
+                <h4>Helpful Tips</h4>
+                <ul>
+                    <li>Choose a strong password (at least 6 characters, with numbers, uppercase, and special characters).</li>
+                    <li>Your username cannot be part of your password.</li>
+                    <li>If you're having trouble, check our <a href="#">FAQ</a> or <a href="#">support page</a>.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Signup Form -->
+        <div class="col-md-8">
+            <div class="card text-center mt-">
+                <h2>Signup</h2>
+                <form method="POST" class="mt-4" id="signupForm">
+                    <!-- Hidden CSRF Token -->
+                    {{ form.hidden_tag() }}
+
+                    <!-- Display validation errors -->
+                    {% for field, errors in form.errors.items() %}
+                        {% for error in errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+
+    
+                    <!-- Username -->
+                    <div class="form-group mb-3">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control", placeholder="Enter your username") }}
+                    </div>
+    
+                    <!-- Email -->
+                    <div class="form-group mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="Enter your email") }}
+                    </div>
+    
+                    <div class="form-group mb-3">
+                        <div class="d-flex gap-2">
+                            <!-- Country Code -->
+                            <div class="form-group flex-shrink-0" style="width: 160px;">
+                                <label for="country_code">Country Code</label>
+                                {{ form.country_code(class="form-control") }}
+                            </div>
+                
+                            <!-- Phone Number -->
+                            <div class="form-group flex-grow-1">
+                                <label for="phone_number">Phone Number</label>
+                                {{ form.phone_number(class="form-control", placeholder="Enter your phone number") }}
+                            </div>
+                        </div>
+                    </div>
+                
+
+                    <!-- Password -->
+                    <div class="form-group mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control", id="password", placeholder="Enter your password") }}
+                        <small class="form-text text-muted">Password must contain at least:</small>
+                        <div class="password-requirements text-start">
+                            <label><input type="checkbox" id="minLength" disabled> 6 characters</label><br>
+                            <label><input type="checkbox" id="number" disabled> 1 number</label><br>
+                            <label><input type="checkbox" id="upperCase" disabled> 1 uppercase letter</label><br>
+                            <label><input type="checkbox" id="specialChar" disabled> 1 special character</label>
+                        </div>
+                        <div id="passwordUsernameError" style="display:none; color:red;">
+                            Password cannot contain your username.
+                        </div>
+                        <div id="passwordSequenceError" style="display:none; color:red;">
+                            Password cannot contain a numerical sequence (3 or more digits in a row).
+                        </div>                    
+                    </div>
+    
+                    <!-- Confirm Password -->
+                    <div class="form-group mb-3">
+                        {{ form.confirm_password.label(class="form-label") }}
+                        {{ form.confirm_password(class="form-control", id="confirm_password", placeholder="Confirm your password") }}
+                        <div id="passwordMismatch" class="password-mismatch text-danger" style="display: none;">
+                            Passwords do not match!
+                        </div>
+                    </div>
+    
+                    <!-- Country Selection -->
+                    <div class="mb-3">
+                        {{ form.country.label(class="form-label") }}
+                        {{ form.country(class="form-control") }}
+                    </div>              
+    
+                    <!-- Role Selection -->
+                    <div class="form-group">
+                        <label for="role">{{ form.role.label }}</label>
+                        {{ form.role(class="form-control") }}
+                    </div>                
+    
+                    <!-- reCAPTCHA -->
+                    <div class="form-group mb-3">
+                        <div class="d-flex justify-content-center">
+                            <div class="g-recaptcha" data-sitekey="6LfQLKYqAAAAAFKxjsCw72AK_aXRnaKLVN2sdxy5"></div>
+                        </div>
+                        {{ form.recaptcha }}
+                    </div>
+            
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Signup</button>
+                </form>
+                
+                <!-- If no account, offer signup link -->
+                <p class="mt-3">Already have an account? <a href="{{ url_for('routes.login') }}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Check required fields
+            const requiredFields = document.querySelectorAll('.required');
+            requiredFields.forEach(function(field) {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    // Display an error message or highlight the field
+                    field.classList.add('error');
+                    const errorMessage = document.createElement('div');
+                    errorMessage.textContent = 'This field is required';
+                    errorMessage.classList.add('error-message');
+                    field.parentElement.appendChild(errorMessage);
+                } else {
+                    field.classList.remove('error');
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault(); // Stop form submission if validation fails
+            }
+        });
+
+        // -------- Password Validation Logic -------- //
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        const passwordMismatch = document.getElementById('passwordMismatch');
+        const usernameInput = document.getElementById('username'); // Add this for username
+        const passwordUsernameError = document.getElementById('passwordUsernameError'); // Error message for username match
+        const passwordSequenceError = document.getElementById('passwordSequenceError'); // Error message for numerical sequence
+        const form = document.getElementById('signupForm');
+    
+        // Password requirement checkboxes
+        const minLengthCheck = document.getElementById('minLength');
+        const numberCheck = document.getElementById('number');
+        const upperCaseCheck = document.getElementById('upperCase');
+        const specialCharCheck = document.getElementById('specialChar');
+    
+        // Password validation requirements
+        const passwordRequirements = {
+            minLength: { checkbox: minLengthCheck, regex: /.{6,}/ },
+            number: { checkbox: numberCheck, regex: /\d/ },
+            upperCase: { checkbox: upperCaseCheck, regex: /[A-Z]/ },
+            specialChar: { checkbox: specialCharCheck, regex: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>\/?]/ }
+        };
+    
+        // Function to check if password contains the username or numerical sequence
+        function validatePasswordUsernameAndSequence() {
+            const password = passwordInput.value;
+            const username = usernameInput.value;
+    
+            // Check if password contains username (case insensitive)
+            if (password.toLowerCase().includes(username.toLowerCase())) {
+                passwordUsernameError.style.display = 'block'; // Show error
+            } else {
+                passwordUsernameError.style.display = 'none'; // Hide error
+            }
+    
+            // Check if password contains a numerical sequence
+            const numericalSequenceRegex = /\d{3,}/; // Detect 3 or more consecutive digits
+            if (numericalSequenceRegex.test(password)) {
+                passwordSequenceError.style.display = 'block'; // Show error
+            } else {
+                passwordSequenceError.style.display = 'none'; // Hide error
+            }
+        }
+    
+        // Validate password input and update requirement states
+        function validatePassword() {
+            const password = passwordInput.value;
+    
+            for (const requirement in passwordRequirements) {
+                const { checkbox, regex } = passwordRequirements[requirement];
+                if (regex.test(password)) {
+                    checkbox.checked = true;
+                    checkbox.parentElement.classList.add('valid-label'); // Green style
+                } else {
+                    checkbox.checked = false;
+                    checkbox.parentElement.classList.remove('valid-label'); // Remove style
+                }
+            }
+    
+            validatePasswordUsernameAndSequence(); // Check username match and numerical sequence
+        }
+    
+        // Check if passwords match
+        function checkPasswordMismatch() {
+            if (passwordInput.value && confirmPasswordInput.value) {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    passwordMismatch.style.display = 'block';
+                } else {
+                    passwordMismatch.style.display = 'none';
+                }
+            } else {
+                passwordMismatch.style.display = 'none';
+            }
+        }
+    
+        // Event listeners for password inputs
+        passwordInput.addEventListener('input', () => {
+            validatePassword();
+            checkPasswordMismatch();
+        });
+        confirmPasswordInput.addEventListener('input', checkPasswordMismatch);
+    
+        // Form submit validation to prevent mismatched passwords
+        form.addEventListener('submit', function (e) {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                e.preventDefault(); // Stop form submission
+                passwordMismatch.style.display = 'block';
+            }
+        });
+    
+        // -------- Phone Number Validation -------- //
+        const phoneInput = document.getElementById('phone_number');
+        phoneInput.addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/\D/g, ''); // Allow only digits
+        });
+    
+        // -------- Country Code and Flag Dropdown -------- //
+        const countries = [
+            { code: '+213', iso: 'dz' }, { code: '+244', iso: 'ao' },
+            { code: '+229', iso: 'bj' }, { code: '+267', iso: 'bw' },
+            { code: '+226', iso: 'bf' }, { code: '+257', iso: 'bi' },
+            { code: '+238', iso: 'cv' }, { code: '+237', iso: 'cm' },
+            { code: '+236', iso: 'cf' }, { code: '+235', iso: 'td' },
+            { code: '+269', iso: 'km' }, { code: '+242', iso: 'cg' },
+            { code: '+243', iso: 'cd' }, { code: '+253', iso: 'dj' },
+            { code: '+20', iso: 'eg' },  { code: '+240', iso: 'gq' },
+            { code: '+291', iso: 'er' }, { code: '+268', iso: 'sz' },
+            { code: '+251', iso: 'et' }, { code: '+241', iso: 'ga' },
+            { code: '+220', iso: 'gm' }, { code: '+233', iso: 'gh' },
+            { code: '+224', iso: 'gn' }, { code: '+245', iso: 'gw' },
+            { code: '+225', iso: 'ci' }, { code: '+254', iso: 'ke' },
+            { code: '+266', iso: 'ls' }, { code: '+231', iso: 'lr' },
+            { code: '+218', iso: 'ly' }, { code: '+261', iso: 'mg' },
+            { code: '+265', iso: 'mw' }, { code: '+223', iso: 'ml' },
+            { code: '+222', iso: 'mr' }, { code: '+230', iso: 'mu' },
+            { code: '+212', iso: 'ma' }, { code: '+258', iso: 'mz' },
+            { code: '+264', iso: 'na' }, { code: '+227', iso: 'ne' },
+            { code: '+234', iso: 'ng' }, { code: '+250', iso: 'rw' },
+            { code: '+239', iso: 'st' }, { code: '+221', iso: 'sn' },
+            { code: '+248', iso: 'sc' }, { code: '+232', iso: 'sl' },
+            { code: '+252', iso: 'so' }, { code: '+27', iso: 'za' },
+            { code: '+211', iso: 'ss' }, { code: '+249', iso: 'sd' },
+            { code: '+228', iso: 'tg' }, { code: '+216', iso: 'tn' },
+            { code: '+256', iso: 'ug' }, { code: '+260', iso: 'zm' },
+            { code: '+263', iso: 'zw' }
+        ];
+    
+        const selectedFlag = document.getElementById("selected-flag");
+        const selectedCode = document.getElementById("selected-code");
+        const dropdownOptions = document.getElementById("dropdown-options");
+    
+        // Add event listener for country code selection
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', () => {
+                const countryCode = option.querySelector('span').textContent;
+                document.getElementById('selected-flag').src = option.querySelector('img').src;
+                document.getElementById('selected-code').textContent = countryCode;
+        
+                // Set the country code in the hidden input field
+                document.getElementById('country_code').value = countryCode;
+
+                // Hide the dropdown
+                dropdownOptions.style.display = "none";
+            });
+        });
+
+        // Populate dropdown with countries
+        countries.forEach(country => {
+            const option = document.createElement("div");
+            option.classList.add("option");
+            option.innerHTML = `  
+                <img src="https://flagcdn.com/16x12/${country.iso}.png" alt="Flag">  
+                <span>${country.code}</span>  
+            `;
+            option.addEventListener("click", () => {
+                selectedFlag.src = `https://flagcdn.com/16x12/${country.iso}.png`;
+                selectedCode.textContent = country.code;
+                dropdownOptions.style.display = "none";
+            });
+            dropdownOptions.appendChild(option);
+        });
+    
+        // Toggle dropdown visibility
+        document.getElementById("selected-country").addEventListener("click", () => {
+            dropdownOptions.style.display = dropdownOptions.style.display === "block" ? "none" : "block";
+        });
+    
+        // Set default flag and code (Algeria)
+        selectedFlag.src = "https://flagcdn.com/16x12/dz.png";
+        selectedCode.textContent = "+213";
+    </script>   
+
+    <!-- Load reCAPTCHA JavaScript API-->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onClick(e) {
+          e.preventDefault();
+          grecaptcha.enterprise.ready(async () => {
+            const token = await grecaptcha.enterprise.execute('6LemULYqAAAAAD0epzSleL_OuGwYBCvZNkbaEar4', {action: 'LOGIN'});
+          });
+        }
+      </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Checkout Confirmation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            margin-top: 10px;
+        }
+        .product-image {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        .image-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .checkout-details {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Checkout Successful!</h1>
+
+        <!-- Product Image Section -->
+        <div class="image-section">
+            {% for item in cart_items %}
+                <img src="{{ item.image_url }}" alt="Product Image" class="product-image">
+            {% endfor %}
+        </div>
+
+        <h3>Product Details</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>${{ item.quantity * item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">No items found in your cart.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <h4>Total Amount: ${{ total_amount }}</h4>
+
+        <!-- Checkout Details -->
+        <div class="checkout-details">
+            <h3>Checkout Details</h3>
+            <p><strong>Full Name:</strong> {{ name or 'N/A' }}</p>
+            <p><strong>Shipping Address:</strong> {{ address or 'N/A' }}</p>
+            <p><strong>Payment Method:</strong> {{ payment or 'N/A' }}</p>
+        </div>
+
+        <a href="{{ url_for('buyer_routes.save_receipt', filename=receipt_file) }}" class="btn btn-primary">Save Receipt</a>
+        <a href="{{ url_for('buyer_routes.print_receipt', filename=receipt_file) }}" class="btn btn-secondary">Print Receipt</a>
+    </div>
+
+    <script>
+        function displayConfirmationDetails() {
+            // Retrieve the checkout details from sessionStorage
+            const checkoutDetails = JSON.parse(sessionStorage.getItem("checkoutDetails"));
+    
+            if (checkoutDetails) {
+                // Populate the cart items
+                const tableBody = document.querySelector("tbody");
+                checkoutDetails.cartItems.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.product}</td>
+                        <td>${item.quantity}</td>
+                        <td>₵${item.unitPrice.toFixed(2)}</td>
+                        <td>₵${item.totalPrice.toFixed(2)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+    
+                // Populate total amount
+                document.querySelector("h4 span").textContent = `₵${checkoutDetails.totalAmount.toFixed(2)}`;
+    
+                // Populate checkout details
+                document.querySelector("#name").textContent = checkoutDetails.name || "N/A";
+                document.querySelector("#address").textContent = checkoutDetails.address || "N/A";
+                document.querySelector("#payment").textContent = checkoutDetails.payment || "N/A";
+            } else {
+                document.body.innerHTML = `<p class="text-danger text-center">No checkout details found.</p>`;
+            }
+        }
+    
+        // Display details on page load
+        window.onload = displayConfirmationDetails;
+    </script>
+    
+</body>
+</html>

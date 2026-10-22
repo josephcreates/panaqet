@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- Custom Styling -->
+    <style>
+        body {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            max-width: 600px; /* Containerized width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-control,
+        .form-control-file {
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        #selected-country {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            padding: 0.75rem;
+            background-color: #f0f0f0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #selected-country img {
+            margin-right: 10px;
+        }
+
+        #dropdown-options {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: 100%;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #dropdown-options .option {
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #dropdown-options {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: auto; /* Automatically adjusts to content width */
+            max-width: 250px; /* Limiting the width */
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #profileImagePreview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-top: 15px;
+        }
+
+        .btn-primary:disabled {
+            background-color: #cccccc;
+            border-color: #cccccc;
+        }
+
+        .btn-primary {
+            background-color: #2575fc;
+            border-color: #2575fc;
+            color: #fff;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d5bb5;
+            border-color: #1d5bb5;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Edit Profile</h2>
+        <form method="POST" action="{{ url_for('routes.edit_profile') }}" enctype="multipart/form-data" id="editProfileForm">
+            {{ form.hidden_tag() }}
+
+            <!-- Username -->
+            <div class="form-group mb-4">
+                {{ form.username.label(class='form-label') }}
+                {{ form.username(class='form-control', value=current_user.username) }}
+            </div>
+
+            <!-- Email -->
+            <div class="form-group mb-4">
+                {{ form.email.label(class='form-label') }}
+                {{ form.email(class='form-control', value=current_user.email) }}
+            </div>
+
+            <!-- Country Code and Flag Dropdown with Phone Number beside it -->
+            <div class="form-row mb-4">
+                <div class="form-group">
+                    <label for="countryCode" class="form-label">Country Code</label>
+                    <div id="selected-country" class="form-control d-flex align-items-center">
+                        <img id="selected-flag" src="https://flagcdn.com/16x12/{{ current_user.country_code_iso }}.png" alt="Flag" style="width: 24px;">
+                        <span id="selected-code" class="ms-2">{{ current_user.country_code }}</span>
+                    </div>
+                    <div id="dropdown-options" class="mt-2">
+                        <!-- Dropdown options will be dynamically populated here -->
+                    </div>
+                    <input type="hidden" name="country_code" id="countryCodeInput" value="{{ current_user.country_code }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phoneNumber" name="phone_number" value="{{ current_user.phone_number }}" required>
+                </div>
+            </div>
+
+            <!-- Country -->
+            <div class="form-group mb-4">
+                {{ form.country.label(class='form-label') }}
+                <select class="form-control" name="country" id="country" required>
+                    <option value="" disabled selected>Select your country</option>
+                    <option value="Algeria">Algeria</option>
+                    <option value="Angola">Angola</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Botswana">Botswana</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                    <option value="Burundi">Burundi</option>
+                    <option value="Cabo Verde">Cabo Verde</option>
+                    <option value="Cameroon">Cameroon</option>
+                    <option value="Central African Republic">Central African Republic</option>
+                    <option value="Chad">Chad</option>
+                    <option value="Comoros">Comoros</option>
+                    <option value="Congo">Congo</option>
+                    <option value="Democratic Republic of the Congo">Democratic Republic of the Congo</option>
+                    <option value="Djibouti">Djibouti</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="Equatorial Guinea">Equatorial Guinea</option>
+                    <option value="Eritrea">Eritrea</option>
+                    <option value="Eswatini">Eswatini</option>
+                    <option value="Ethiopia">Ethiopia</option>
+                    <option value="Gabon">Gabon</option>
+                    <option value="Gambia">Gambia</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Guinea">Guinea</option>
+                    <option value="Guinea-Bissau">Guinea-Bissau</option>
+                    <option value="Ivory Coast">Ivory Coast</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Lesotho">Lesotho</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Libya">Libya</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Malawi">Malawi</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Mauritania">Mauritania</option>
+                    <option value="Mauritius">Mauritius</option>
+                    <option value="Morocco">Morocco</option>
+                    <option value="Mozambique">Mozambique</option>
+                    <option value="Namibia">Namibia</option>
+                    <option value="Nauru">Nauru</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Rwanda">Rwanda</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Seychelles">Seychelles</option>
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="South Sudan">South Sudan</option>
+                    <option value="Sudan">Sudan</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="Zambia">Zambia</option>
+                    <option value="Zimbabwe">Zimbabwe</option>
+                </select>
+            </div>
+
+            <!-- Profile Image -->
+            <div class="form-group mb-4">
+                {{ form.profile_image.label(class='form-label') }}
+                {{ form.profile_image(class='form-control-file', id='profileImageInput') }}
+            </div>
+            <div class="form-group mb-4 text-center">
+                <img id="profileImagePreview" src="{% if current_user.profile_image %}{{ url_for('static', filename=current_user.profile_image.replace('\\', '/')) }}{% else %}{{ url_for('static', filename='default_profile.png') }}{% endif %}" alt="Profile Image">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                {{ form.submit(class='btn btn-primary w-100', disabled=True) }}
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap 5 JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formFields = [
+                document.getElementById('username'),
+                document.getElementById('email'),
+                document.getElementById('phoneNumber'),
+                document.getElementById('countryCodeInput'),
+                document.getElementById('profileImageInput'),
+                document.getElementById('country')
+            ];
+    
+            const initialValues = formFields.reduce((values, field) => {
+                values[field.name || field.id] = field.value;
+                return values;
+            }, {});
+    
+            const saveButton = document.querySelector('.btn-primary');
+    
+            // Function to check if there are any changes
+            function checkForChanges() {
+                let hasChanges = false;
+    
+                formFields.forEach(field => {
+                    if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA' || field.tagName === 'SELECT') {
+                        if (initialValues[field.name || field.id] !== field.value) {
+                            hasChanges = true;
+                        }
+                    }
+                });
+    
+                // Enable or disable the save button
+                saveButton.disabled = !hasChanges;
+            }
+    
+            // Listen for changes in form fields
+            formFields.forEach(field => {
+                field.addEventListener('input', checkForChanges);
+            });
+    
+            // Reset to initial values if undo button is clicked
+            const undoButton = document.querySelector('.btn-undo');
+            if (undoButton) {
+                undoButton.addEventListener('click', function () {
+                    formFields.forEach(field => {
+                        field.value = initialValues[field.name || field.id];
+                    });
+                    saveButton.disabled = true;
+                });
+            }
+    
+            const selectedCountry = document.getElementById('selected-country');
+            const dropdownOptions = document.getElementById('dropdown-options');
+            const countryCodeInput = document.getElementById('countryCodeInput');
+            const selectedFlag = document.getElementById('selected-flag');
+            const selectedCode = document.getElementById('selected-code');
+    
+            // List of countries with their country codes and flags
+            const countries = [
+                { code: '+213', iso: 'dz', name: 'Algeria' },
+                { code: '+244', iso: 'ao', name: 'Angola' },
+                { code: '+229', iso: 'bj', name: 'Benin' },
+                { code: '+267', iso: 'bw', name: 'Botswana' },
+                { code: '+226', iso: 'bf', name: 'Burkina Faso' },
+                { code: '+257', iso: 'bi', name: 'Burundi' },
+                { code: '+238', iso: 'cv', name: 'Cabo Verde' },
+                { code: '+237', iso: 'cm', name: 'Cameroon' },
+                { code: '+236', iso: 'cf', name: 'Central African Republic' },
+                { code: '+235', iso: 'td', name: 'Chad' },
+                { code: '+269', iso: 'km', name: 'Comoros' },
+                { code: '+242', iso: 'cg', name: 'Congo' },
+                { code: '+243', iso: 'cd', name: 'Democratic Republic of the Congo' },
+                { code: '+253', iso: 'dj', name: 'Djibouti' },
+                { code: '+20', iso: 'eg', name: 'Egypt' },
+                { code: '+240', iso: 'gq', name: 'Equatorial Guinea' },
+                { code: '+291', iso: 'er', name: 'Eritrea' },
+                { code: '+268', iso: 'sz', name: 'Eswatini' },
+                { code: '+251', iso: 'et', name: 'Ethiopia' },
+                { code: '+241', iso: 'ga', name: 'Gabon' },
+                { code: '+220', iso: 'gm', name: 'Gambia' },
+                { code: '+233', iso: 'gh', name: 'Ghana' },
+                { code: '+224', iso: 'gn', name: 'Guinea' },
+                { code: '+245', iso: 'gw', name: 'Guinea-Bissau' },
+                { code: '+225', iso: 'ci', name: 'Ivory Coast' },
+                { code: '+254', iso: 'ke', name: 'Kenya' },
+                { code: '+266', iso: 'ls', name: 'Lesotho' },
+                { code: '+231', iso: 'lr', name: 'Liberia' },
+                { code: '+218', iso: 'ly', name: 'Libya' },
+                { code: '+261', iso: 'mg', name: 'Madagascar' },
+                { code: '+265', iso: 'mw', name: 'Malawi' },
+                { code: '+223', iso: 'ml', name: 'Mali' },
+                { code: '+222', iso: 'mr', name: 'Mauritania' },
+                { code: '+230', iso: 'mu', name: 'Mauritius' },
+                { code: '+212', iso: 'ma', name: 'Morocco' },
+                { code: '+258', iso: 'mz', name: 'Mozambique' },
+                { code: '+264', iso: 'na', name: 'Namibia' },
+                { code: '+674', iso: 'nr', name: 'Nauru' },
+                { code: '+234', iso: 'ng', name: 'Nigeria' },
+                { code: '+250', iso: 'rw', name: 'Rwanda' },
+                { code: '+221', iso: 'sn', name: 'Senegal' },
+                { code: '+248', iso: 'sc', name: 'Seychelles' },
+                { code: '+232', iso: 'sl', name: 'Sierra Leone' },
+                { code: '+27', iso: 'za', name: 'South Africa' },
+                { code: '+211', iso: 'ss', name: 'South Sudan' },
+                { code: '+249', iso: 'sd', name: 'Sudan' },
+                { code: '+228', iso: 'tg', name: 'Togo' },
+                { code: '+256', iso: 'ug', name: 'Uganda' },
+                { code: '+260', iso: 'zm', name: 'Zambia' },
+                { code: '+263', iso: 'zw', name: 'Zimbabwe' }
+            ];
+    
+            // Populate the dropdown with country options
+            function populateCountryDropdown() {
+                countries.forEach(country => {
+                    const option = document.createElement('div');
+                    option.classList.add('option');
+                    option.innerHTML = `<img src="https://flagcdn.com/16x12/${country.iso}.png" alt="${country.name} Flag" style="width: 24px;">
+                                        <span class="ms-2">${country.name} (${country.code})</span>`;
+                    option.setAttribute('data-country-code', country.code);
+                    option.setAttribute('data-country-iso', country.iso);
+                    option.setAttribute('data-country-name', country.name);
+                    dropdownOptions.appendChild(option);
+                });
+            }
+    
+            // Toggle dropdown visibility when selected-country is clicked
+            selectedCountry.addEventListener('click', function (event) {
+                event.stopPropagation(); // Prevent the event from bubbling up and closing the dropdown
+                dropdownOptions.style.display = dropdownOptions.style.display === 'none' ? 'block' : 'none';
+            });
+    
+            // Hide the dropdown if the user clicks anywhere outside of it
+            document.addEventListener('click', function (event) {
+                if (!selectedCountry.contains(event.target) && !dropdownOptions.contains(event.target)) {
+                    dropdownOptions.style.display = 'none';
+                }
+            });
+    
+            // Update selected country details when an option is clicked
+            dropdownOptions.addEventListener('click', function (event) {
+                if (event.target.classList.contains('option')) {
+                    const countryCode = event.target.getAttribute('data-country-code');
+                    const countryIso = event.target.getAttribute('data-country-iso');
+                    const countryName = event.target.getAttribute('data-country-name');
+    
+                    // Update the UI with the selected country
+                    selectedFlag.src = `https://flagcdn.com/16x12/${countryIso}.png`;
+                    selectedCode.textContent = countryCode;
+                    countryCodeInput.value = countryCode;
+                    selectedCountry.textContent = countryName;
+    
+                    // Hide the dropdown
+                    dropdownOptions.style.display = 'none';
+                }
+            });
+    
+            // Call function to load the countries into the dropdown
+            populateCountryDropdown();
+        });
+    </script>
+    
+    
+</body>
+
+</html>

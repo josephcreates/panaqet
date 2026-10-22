@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Subscriptions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJxK6RiA+6zYzDZyxX+a+bm0aGf2F0iNG2m6ONdGMK4zYWpzFyt23Q9Z3Gg1" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin-top: 5rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+    min-height: 300px;
+    margin-bottom: 30px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.card-footer {
+    background-color: transparent;
+    border-top: 1px solid #e0e0e0;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.btn {
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.btn-primary {
+    background-color: #6c63ff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #5a52e5;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2b2d42;
+    margin-bottom: 2rem;
+}
+
+/* Card color variations */
+.card-primary {
+    background-color: #6c63ff;
+}
+
+.card-secondary {
+    background-color: #ff6f61;
+}
+
+.card-success {
+    background-color: #28a745;
+}
+
+.card-info {
+    background-color: #17a2b8;
+}
+
+/* Flexbox layout for full screen */
+.card-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.card {
+    flex: 1 1 30%; /* This ensures each card takes up 30% of the row on larger screens */
+    max-width: 30%; /* Ensures cards don't stretch too much */
+}
+
+.card-title i {
+    font-size: 2rem;
+    margin-right: 10px;
+    color: #ffffff; /* Set the icon color */
+}
+
+/* Style for changing icon colors */
+.card i {
+    color: #ffffff; /* Default white color */
+    transition: color 0.3s ease-in-out;
+}
+
+/* Change icon color on hover */
+.card:hover i {
+    color: #ffcd00; /* Example hover color */
+}
+
+/* Specific colors for each icon */
+.card-primary i {
+    color: #ffffff; /* White for the primary plan */
+}
+
+.card-secondary i {
+    color: #ffffff; /* White for the secondary plan */
+}
+
+.card-success i {
+    color: #ffffff; /* White for the success plan */
+}
+
+.card-info i {
+    color: #ffffff; /* White for the info plan */
+}
+
+/* Additional color variations */
+.card-primary:hover i {
+    color: #ffcd00; /* Hover color for primary plan */
+}
+
+.card-secondary:hover i {
+    color: #51ff00; /* Hover color for secondary plan */
+}
+
+.card-success:hover i {
+    color: #2878a7; /* Hover color for success plan */
+}
+
+.card-info:hover i {
+    color: #b81768; /* Hover color for info plan */
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex: 1 1 45%; /* Adjusts cards for medium screen sizes */
+        max-width: 45%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        flex: 1 1 100%; /* Cards take up full width on smaller screens */
+        max-width: 100%;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="container my-5">
+        <h1 class="text-center section-title">Available Subscriptions</h1>
+    
+        <div class="card-columns">
+            {% if unsubscribed_subscriptions %}
+                {% for subscription in unsubscribed_subscriptions %}
+                    <div class="card {% if loop.index % 4 == 0 %}card-primary{% elif loop.index % 4 == 1 %}card-secondary{% elif loop.index % 4 == 2 %}card-success{% else %}card-info{% endif %}">
+                        <div class="card-body">
+                            <!-- Plan Icon -->
+                            <div class="d-flex justify-content-center mb-3">
+                                {% if subscription.name == "Basic Plan" %}
+                                    <i class="fas fa-user-circle fa-3x"></i> <!-- Example icon for Basic -->
+                                {% elif subscription.name == "Standard Plan" %}
+                                    <i class="fas fa-star fa-3x"></i> <!-- Example icon for Standard -->
+                                {% elif subscription.name == "Premium Plan" %}
+                                    <i class="fas fa-crown fa-3x"></i> <!-- Premium Plan icon -->
+                                {% elif subscription.name == "Seasonal Boost Plan" %}
+                                    <i class="fas fa-snowflake fa-3x"></i> <!-- Seasonal Plan -->
+                                {% elif subscription.name == "Enterprise Plan" %}
+                                    <i class="fas fa-building fa-3x"></i> <!-- Enterprise icon -->
+                                {% elif subscription.name == "Trial Plan" %}
+                                    <i class="fas fa-gift fa-3x"></i> <!-- Trial icon -->
+                                {% elif subscription.name == "Pay-Per-Feature Plan" %}
+                                    <i class="fas fa-dollar-sign fa-3x"></i> <!-- Pay-Per-Feature icon -->
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title">{{ subscription.name }}</h5>
+                            <p class="card-text">{{ subscription.description }}</p>
+                            <p class="card-text"><strong>Price:</strong> ${{ subscription.price }}</p>
+                            <p class="card-text"><strong>Validity:</strong> {{ subscription.validity_period }} days</p>
+    
+                            <!-- Features Section -->
+                            <ul class="list-group mt-3">
+                                {% if subscription.name == "Basic Plan" %}
+                                    <li class="list-group-item">List up to 10 products</li>
+                                    <li class="list-group-item">Limited support (email only)</li>
+                                    <li class="list-group-item">Basic analytics (views and clicks)</li>
+                                {% elif subscription.name == "Standard Plan" %}
+                                    <li class="list-group-item">List up to 50 products</li>
+                                    <li class="list-group-item">Priority placement in search results</li>
+                                    <li class="list-group-item">Advanced analytics (views, clicks, and conversions)</li>
+                                    <li class="list-group-item">Email and chat support</li>
+                                {% elif subscription.name == "Premium Plan" %}
+                                    <li class="list-group-item">Unlimited product listings</li>
+                                    <li class="list-group-item">Promoted products in top categories</li>
+                                    <li class="list-group-item">Full analytics suite</li>
+                                    <li class="list-group-item">Dedicated account manager</li>
+                                {% elif subscription.name == "Seasonal Boost Plan" %}
+                                    <li class="list-group-item">Highlighted placement during high-traffic periods</li>
+                                    <li class="list-group-item">List up to 20 additional seasonal products</li>
+                                    <li class="list-group-item">Optional social media promotions</li>
+                                {% elif subscription.name == "Enterprise Plan" %}
+                                    <li class="list-group-item">Unlimited product listings</li>
+                                    <li class="list-group-item">Personalized promotions</li>
+                                    <li class="list-group-item">Custom analytics and insights</li>
+                                    <li class="list-group-item">Multi-user access for large teams</li>
+                                    <li class="list-group-item">API access for integration</li>
+                                {% elif subscription.name == "Trial Plan" %}
+                                    <li class="list-group-item">List up to 5 products</li>
+                                    <li class="list-group-item">Basic analytics (views and clicks)</li>
+                                {% elif subscription.name == "Pay-Per-Feature Plan" %}
+                                    <li class="list-group-item">Flexible add-on features</li>
+                                    <li class="list-group-item">Base plan benefits</li>
+                                    <li class="list-group-item">Custom pricing for extra features</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <form method="POST" action="{{ url_for('seller_routes.toggle_seller_subscription', subscription_id=subscription.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-primary" id="subscribeButton{{ subscription.id }}">
+                                    Subscribe Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert-warning" role="alert">
+                        No active subscriptions are currently available for you to subscribe to.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p8x7L4+DZLqOMa5l0qC1JztJr6yXbf97R2+ZLl8k7Wf9zF7" crossorigin="anonymous"></script>
+<script>
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function () {
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerText = 'Processing...';  // Optional: Change button text to indicate it's in progress
+        });
+    });
+</script>
+
+</body>
+</html>

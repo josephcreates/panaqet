@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <!-- Bootstrap 5.3.0 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;  /* Prevent horizontal scrolling */
+        }
+
+        .navbar {
+            background-color: #232f3e;
+            color: white;
+            height: 50px;
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+
+        .navbar a {
+            color: white !important;
+        }
+
+        .container {
+            margin-top: 10px;
+            margin: 5px;
+        }
+
+        .product-img-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            padding: 15px;
+        }
+
+        .product-details {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            color: #b12704;
+            font-weight: bold;
+        }
+
+        .btn-primary, .btn-warning {
+            width: 50%;
+            margin-bottom: 10px;
+        }
+
+        .ratings {
+            color: #ffa41c;
+        }
+
+        .reviews {
+            color: #007185;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .qr-code-wrapper {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            width: 150px;
+            height: 150px;
+        }
+
+        .product-description {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" style="height: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('routes.marketplace') }}">
+                            <i class="fas fa-store-alt me-1"></i> Marketplace
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('buyer_routes.cart') }}">
+                            <i class="fas fa-shopping-cart me-1"></i> Cart
+                            <span class="badge bg-warning text-dark">{{ cart_count }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Product Section -->
+    <div class="container position-relative">
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-md-5">
+                <div class="product-img-container">
+                    {% if product.images %}
+                        <div id="productImagesCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for img in product.images %}
+                                    {% set image_path = img.image_url.replace('\\', '/') %}
+                                    {% if image_path.startswith('static/') %}
+                                        {% set image_path = image_path[7:] %}
+                                    {% endif %}
+                                    <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+                                        <img src="{{ url_for('static', filename=image_path) }}" class="d-block w-100" alt="Product Image">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if product.images|length > 1 %}
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </button>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <img src="{{ url_for('static', filename='default_image.jpg') }}" alt="No Image Available" class="img-fluid">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-7">
+                <div class="product-details">
+                    <h1>{{ product.name }}</h1>
+                    <p class="price">₵{{ product.price | round(2) }}</p>
+                    <div class="ratings">
+                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="far fa-star"></i>
+                        <span class="reviews">(123 reviews)</span>
+                    </div>
+
+                    <p><strong>Sold by:</strong> 
+                        <a href="{{ url_for('seller_routes.store', seller_id=product.seller_id) }}" class="seller-link">
+                            {{ product.seller.store_name if product.seller.store_name else 'No store name' }}
+                        </a>
+                    </p>
+
+                    <!-- Chat with Seller Button -->
+                    <a href="{{ url_for('chat_routes.chat_with_seller', product_id=product.id, seller_id=product.seller_id) }}" 
+                        class="btn btn-success w-100 mb-3">
+                        <i class="fas fa-comments"></i> Chat with Seller
+                    </a>
+
+                    <!-- Add to Cart & Save to Wishlist Side by Side -->
+                    <div class="btn-container">
+                        <!-- Add to Cart Form -->
+                        <form action="{{ url_for('buyer_routes.add_to_cart', product_id=product.id) }}" method="POST">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </form>
+
+                        <!-- Save to Wishlist Form -->
+                        <form action="{{ url_for('buyer_routes.save_to_wishlist', product_id=product.id) }}" method="POST">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-heart"></i> Save to Wishlist
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="container product-description mt-4">
+                        <h3>Product Description</h3>
+                        <p>{{ product.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Code Section -->
+        {% if product.qr_code %}
+        <div class="qr-code-wrapper">
+            <img src="{{ product.qr_code }}" alt="QR Code for {{ product.name }}" class="img-fluid">
+            <p class="mt-2 text-muted" style="font-size: 0.9rem;">Scan to view details</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

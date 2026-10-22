@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Google Fonts - Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <!-- Custom CSS -->
+    
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" style="height: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.admin_dashboard') }}">Admin Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.marketplace') }}">Marketplace</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.manage_subscriptions') }}">View Subscriptions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.settings') }}">Settings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main" id="main">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar with Toggle Button -->
+                <nav id="sidebar" class="sidebar">
+                    <div class="sidebar-toggler" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                        <span class="sidebar-title link-text">Admin Dashboard</span>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#v-pills-dashboard-overview" data-toggle="pill">
+                                <i class="fas fa-tachometer-alt"></i> <span class="link-text">Dashboard Overview</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="v-pills-user-management-tab" data-toggle="pill" href="#v-pills-user-management" role="tab" aria-controls="v-pills-user-management" aria-selected="false">
+                                <i class="fas fa-users tab-icon"></i> <span class="link-text">User Management</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="v-pills-product-management-tab" data-toggle="pill" href="#v-pills-product-management" role="tab" aria-controls="v-pills-product-management" aria-selected="false">
+                                <i class="fas fa-box-open tab-icon"></i> <span class="link-text">Product Management</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="v-pills-order-management-tab" data-toggle="pill" href="#v-pills-order-management" role="tab" aria-controls="v-pills-order-management" aria-selected="false">
+                                <i class="fas fa-shopping-cart tab-icon"></i> <span class="link-text">Order Management</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="v-pills-category-tag-management-tab" data-toggle="pill" href="#v-pills-category-tag-management" role="tab" aria-controls="v-pills-category-tag-management" aria-selected="false">
+                                <i class="fas fa-tags tab-icon"></i> <span class="link-text">Tag Management</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="v-pills-reports-analytics-tab" data-toggle="pill" href="#v-pills-reports-analytics" role="tab" aria-controls="v-pills-reports-analytics" aria-selected="false">
+                                <i class="fas fa-chart-line tab-icon"></i> <span class="link-text">Reports & Analytics</span>
+                            </a>
+                        </li>                      
+                    </ul>
+                </nav>
+
+                {% include 'chat_widget.html' %}
+
+        
+                <!-- Main Content -->
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                    <div class="tab-content">
+                        <!-- Tab panes -->
+                        <div class="tab-pane fade show active" id="v-pills-dashboard-overview" role="tabpanel" aria-labelledby="v-pills-dashboard-overview-tab">
+                            <h4>Dashboard Overview</h4>
+                            <p>Dashboard overview content goes here.</p>
+                        </div>
+                        <div class="tab-pane fade" id="v-pills-user-management" role="tabpanel" aria-labelledby="v-pills-user-management-tab">
+                            <h4>User Management</h4>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Sellers</h5>
+                                            <p class="card-text">{{ total_sellers }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Buyers</h5>
+                                            <p class="card-text">{{ total_buyers }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Admins</h5>
+                                            <p class="card-text">{{ total_admins }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Users</h5>
+                                            <p class="card-text">{{ total_users }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <button class="btn btn-primary" id="copyBtn">Copy</button>
+                                <button class="btn btn-secondary" onclick="window.print()">Print</button>
+                                <a href="{{ url_for('admin_routes.export_users_pdf') }}" class="btn btn-danger">Export as PDF</a>
+                                <a href="{{ url_for('admin_routes.export_users_excel') }}" class="btn btn-success">Export as Excel</a>
+                                <a href="{{ url_for('admin_routes.export_users_word') }}" class="btn btn-info">Export as Word</a>
+                            </div>
+                        
+                            <div class="col-md-12 text-center">
+                                <div class="table-responsive">
+                                    <table id="userTable" class="display mx-auto">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in users %}
+                                            <tr>
+                                                <td>{{ user.id }}</td>
+                                                <td>{{ user.username }}</td>
+                                                <td>{{ user.email }}</td>
+                                                <td>{{ user.role }}</td>
+                                                <td>
+                                                    <a href="{{ url_for('admin_routes.admin_view_user', user_id=user.id) }}" class="btn btn-primary">View</a>
+                                                    <a href="{{ url_for('admin_routes.admin_edit_user', user_id=user.id) }}" class="btn btn-warning">Edit</a>
+                                                    <a href="{{ url_for('admin_routes.admin_delete_user', user_id=user.id) }}" class="btn btn-danger">Delete</a>
+                                                </td>                                        
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                                                     
+                            
+                            <script>
+                            function copyTable() {
+                                var table = document.querySelector("#userTable");
+                                var range = document.createRange();
+                                range.selectNode(table);
+                                window.getSelection().removeAllRanges(); // clear current selection
+                                window.getSelection().addRange(range); // to select the table content
+        
+                                try {
+                                    document.execCommand('copy');
+                                    alert("Table copied to clipboard!");
+                                } catch (err) {
+                                    alert("Failed to copy table.");
+                                }
+        
+                                window.getSelection().removeAllRanges(); // clear selection again
+                            }
+        
+                            function printTable() {
+                                // Get the thead and tbody content
+                                var tableContent = document.querySelector("#userTable thead").outerHTML;
+                                tableContent += document.querySelector("#userTable tbody").outerHTML;
+                            
+                                // Create a new window for printing
+                                var printWindow = window.open('', '', 'height=500,width=800');
+                                printWindow.document.write('<html><head><title>Print Table</title>');
+                                printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid black; padding: 8px; text-align: left; } </style>');
+                                printWindow.document.write('</head><body>');
+                                printWindow.document.write('<table>' + tableContent + '</table>');
+                                printWindow.document.write('</body></html>');
+                                
+                                // Close the document and trigger print
+                                printWindow.document.close();
+                                printWindow.print();
+                            }
+        
+                            function exportAsPDF() {
+                                const { jsPDF } = window.jspdf;
+                                var doc = new jsPDF();
+        
+                                doc.autoTable({
+                                    html: '#userTable',
+                                    startY: 20,
+                                    theme: 'grid',
+                                    headStyles: { fillColor: [0, 0, 0] },
+                                    margin: { top: 10 }
+                                });
+        
+                                doc.save('users_table.pdf');
+                            }
+        
+                            function exportAsExcel() {
+                                var table = document.getElementById("userTable");
+                                var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet 1" });
+                                XLSX.writeFile(workbook, "users_table.xlsx");
+                            }
+                            
+                            function exportAsWord() {
+                                var table = document.querySelector("#userTable").outerHTML;
+        
+                                // Create a Word document template
+                                var preHtml = "<html><head><meta charset='utf-8'><title>Table Export</title></head><body>";
+                                var postHtml = "</body></html>";
+                                var html = preHtml + "<table border='1'>" + table + "</table>" + postHtml;
+        
+                                // Convert to Blob and use FileSaver.js to download
+                                var blob = new Blob(['\ufeff', html], {
+                                    type: "application/msword"
+                                });
+        
+                                saveAs(blob, "users_table.doc");
+                            }
+                            </script>                 
+                        </div>                           
+                                                
+                        <div class="tab-pane fade" id="v-pills-product-management" role="tabpanel" aria-labelledby="v-pills-product-management-tab">
+                            <h4>Product Management</h4>
+                            <div class="row">
+                                {% if products %}
+                                    {% for product in products %}
+                                        <div class="col-md-5 col-lg-4 mb-5">
+                                            <div class="card h-100 shadow-sm border-0">
+                                                <!-- Check if the product has images -->
+                                                {% if product.images %}
+                                                    {% set image_path = product.images[0].image_url.replace('\\', '/') %}
+                                                    <img src="{{ image_path }}" 
+                                                         class="card-img-top" 
+                                                         alt="{{ product.name }}" 
+                                                         style="object-fit: cover; width: 100%; height: 250px; border-radius: 10px 10px 0 0;">
+                                                {% else %}
+                                                    <img src="{{ url_for('static', filename='default_image.jpg') }}" 
+                                                         class="card-img-top" 
+                                                         alt="{{ product.name }}" 
+                                                         style="object-fit: cover; width: 100%; height: 250px; border-radius: 10px 10px 0 0;">
+                                                {% endif %} 
+                                                <div class="card-body">
+                                                    <h5 class="card-title text-truncate">{{ product.name }}</h5>
+                                                    <p class="card-text text-truncate">{{ product.description[:100] }}...</p>
+                                                    <p class="card-text text-muted">Category: {{ product.category }}</p>
+                                                    <p class="card-text fw-bold">Price: ₵{{ product.price }}</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <form action="{{ url_for('admin_routes.approve_product', product_id=product.id) }}" method="POST">
+                                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                            <button type="submit" class="btn btn-success">Approve Product</button>
+                                                        </form>
+                                                        
+                                                        <form action="{{ url_for('admin_routes.reject_product', product_id=product.id) }}" method="POST">
+                                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                                        </form>
+                                                    </div>
+                                                    <a href="{{ url_for('admin_routes.admin_view_product', product_id=product.id) }}" class="btn btn-primary btn-sm btn-block mt-3">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p>No products available.</p>
+                                {% endif %}
+                            </div>
+                        </div>                                                
+                                                
+                        <div class="tab-pane fade" id="v-pills-order-management" role="tabpanel" aria-labelledby="v-pills-order-management-tab">
+                            <div class="order-management-container">
+                                <h4 class="mb-4">Order Management</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-striped align-middle">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th scope="col">Order ID</th>
+                                                <th scope="col">Buyer</th>
+                                                <th scope="col">Product</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Total</th>
+                                                <th scope="col" class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamic order rows will be inserted here -->
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">No orders available</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>                        
+                        
+                        <div class="tab-pane fade" id="v-pills-category-tag-management" role="tabpanel" aria-labelledby="v-pills-category-tag-management-tab">
+                            <h4>Category and Tag Management</h4>
+                            <p>Category and tag management content goes here.</p>
+                        </div>
+                        <div class="tab-pane fade" id="v-pills-reports-analytics" role="tabpanel" aria-labelledby="v-pills-reports-analytics-tab">
+                            <h4>Reports and Analytics</h4>
+                            <p>Reports and analytics content goes here.</p>
+                        </div>                                                
+                    </div>
+                </main>
+            </div>
+        </div>
+
+    <!-- Footer -->
+    <!--<footer class="footer">
+        <div class="container text-center">
+            <p>&copy; {{ current_year }} Your Site. All Rights Reserved.</p>
+        </div>
+    </footer>-->
+
+
+    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <!-- JSZip for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <!-- PDFMake (for PDF export) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        // Function to toggle sidebar and save the state
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('collapsed');
+            
+            // Save the collapsed state in localStorage
+            if (sidebar.classList.contains('collapsed')) {
+                localStorage.setItem('sidebarCollapsed', 'true');
+            } else {
+                localStorage.setItem('sidebarCollapsed', 'false');
+            }
+        }
+    
+        // Load sidebar state on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main');
+    
+            // Check localStorage and set the sidebar state
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('collapsed');
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('collapsed');
+            }
+        });
+    </script>
+    <script>
+        // Listen for changes in the toggler
+        document.querySelectorAll('.toggle-status').forEach(item => {
+            item.addEventListener('change', function() {
+                const planId = this.getAttribute('data-plan-id');
+                const isActive = this.checked; // Determine if it's checked (active) or not (inactive)
+    
+                // Send an AJAX request to toggle the status
+                fetch(`/admin/subscriptions/toggle/${planId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': "{{ csrf_token() }}", // CSRF token for security
+                    },
+                    body: JSON.stringify({
+                        is_active: isActive
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the status badge
+                        const statusBadge = document.getElementById(`status-${planId}`);
+                        if (isActive) {
+                            statusBadge.classList.remove('badge-danger');
+                            statusBadge.classList.add('badge-success');
+                            statusBadge.textContent = 'Active';
+                        } else {
+                            statusBadge.classList.remove('badge-success');
+                            statusBadge.classList.add('badge-danger');
+                            statusBadge.textContent = 'Inactive';
+                        }
+                    } else {
+                        alert('Failed to update the status. Please try again.');
+                        // Revert checkbox state if update failed
+                        this.checked = !this.checked;
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('An error occurred. Please try again.');
+                    // Revert checkbox state if AJAX fails
+                    this.checked = !this.checked;
+                });
+            });
+        });
+    </script>
+    </main>
+</body>
+</html>

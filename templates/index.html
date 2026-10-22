@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0071ce;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header .search-bar {
+            flex: 1;
+            margin: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header .search-bar input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+
+        header .search-bar button {
+            background-color: rgb(255, 255, 255);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #0071ce;
+        }
+
+        header .search-bar button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        header .account-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f3f3f3;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #0071ce;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        .menu {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .menu-item .dropdown-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #0071ce;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+            color: #0071ce;
+        }
+
+        .menu-item:hover .dropdown-menu {
+            display: block;
+        }
+
+        .main-carousel {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: url('https://via.placeholder.com/1200x300') no-repeat center center/cover;
+            background-color: #f4f4f4; /* Optional background color */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #0071ce; /* Match your color scheme */
+            cursor: pointer;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            color: #005f8c;
+        }
+
+        .banner-image {
+            max-width: 100%; /* Responsive scaling */
+            width: 100%;
+            height: 150px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow effect */
+            border-radius: 5px; /* Optional rounded corners */
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .card-content h3 {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .card-content a {
+            text-decoration: none;
+            color: #0071ce;
+            font-weight: bold;
+        }
+
+        /* Trending Section */
+        .trending-section {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .trending-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0071ce;
+        }
+
+        .carousel-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .carousel-control-prev, .carousel-control-next {
+            background-color: transparent;
+            border: none;
+            color: #0585ee;
+            font-size: 24px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .carousel-control-prev {
+            left: 10px;
+        }
+
+        .carousel-control-next {
+            right: 10px;
+        }
+
+        .trending-container {
+            display: flex;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .trending-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            max-width: 18%;
+            flex: 0 0 auto;
+            width: 18%;
+            transition: transform 0.2s ease;
+        }
+
+        .trending-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .trending-card h3 {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .trending-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .trending-card:hover {
+            transform: scale(1.05); /* Optional: Adds a hover effect */
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #004E97; /* Dark blue */
+            color: #ffffff; /* White text */
+            font-family: Arial, sans-serif;
+            padding-bottom:  5px;
+        }
+
+        .feedback-section {
+            background-color: #E6F1FC; /* Light blue */
+            text-align: center;
+            padding: 17px 0;
+        }
+
+        .feedback-section p {
+            margin: 0;
+            font-size: 14px;
+            color: #004E97; /* Dark blue text */
+        }
+
+        .feedback-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: 2px solid #004E97; /* Dark blue border */
+            background-color: #ffffff; /* White background */
+            color: #004E97;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-btn:hover {
+            background-color: #004E97;
+            color: #ffffff;
+        }
+
+        .links-section {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1px;
+        }
+
+        .footer-links li {
+            margin: 5px 10px;
+        }
+
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright-section {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+            <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" style="height: 40px;">
+        </a>
+        <div class="search-bar">
+            <input type="text" placeholder="Search everything at Walmart online and in-store">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="account-options">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('routes.signup') }}" role="button">Signup</a>
+            <a class="btn btn-success btn-lg" href="{{ url_for('routes.login') }}" role="button">Login</a>
+            <div>Cart ($0.00)</div>
+        </div>
+    </header>
+    <nav class="navbar">
+        <ul class="menu">
+            <!-- Departments Dropdown -->
+            <li class="menu-item dropdown">
+                <button class="dropdown-btn">Departments &#9662;</button>
+                <div class="dropdown-menu">
+                    <a href="#">Clearance & more savings</a>
+                    <a href="#">Grocery</a>
+                    <a href="#">New Year Goals</a>
+                    <a href="#">New & Trending</a>
+                    <a href="#">Clothing, Shoes & Accessories</a>
+                    <a href="#">Home, Garden & Tools</a>
+                    <a href="#">Electronics & Video Games</a>
+                    <a href="#">Toys, Kids & Baby</a>
+                    <a href="#">Beauty</a>
+                    <a href="#">Personal Care</a>
+                    <a href="#">Auto & Tires</a>
+                    <a href="#">Household Essentials</a>
+                    <a href="#">Pets</a>
+                </div>
+            </li>
+            <!-- Services Dropdown -->
+            <li class="menu-item dropdown">
+                <button class="dropdown-btn">Services &#9662;</button>
+                <div class="dropdown-menu">
+                    <a href="#">Pharmacy</a>
+                    <a href="#">Photo Services</a>
+                    <a href="#">Custom Cakes</a>
+                    <a href="#">Vision Center</a>
+                    <a href="#">Auto Care</a>
+                    <a href="#">Tire Installation</a>
+                </div>
+            </li>
+            <div>|</div>
+            <!-- Static Links -->
+            <li class="menu-item">
+                <a href="#" style="color: #0071ce; text-decoration: none; font-weight: lighter;">Clearance</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" style="color: #0071ce; text-decoration: none; font-weight: lighter">Grocery & Essentials</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" style="color: #0071ce; text-decoration: none; font-weight: lighter">New Year Goals</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" style="color: #0071ce; text-decoration: none; font-weight: lighter">Fashion</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" style="color: #0071ce; text-decoration: none; font-weight: lighter">Home</a>
+            </li>
+            <li>
+                <a href="{{ url_for('routes.signup') }}" class="btn btn-primary btn-lg mt-0">Become an Affiliate</a>
+            </li>
+            <li>
+                <a href="{{ url_for('admin_routes.admin_login') }}" class="btn btn-primary btn-lg mt-0">Admin Login</a>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <!-- Banner Section -->
+        <div class="main-carousel">
+            <img src="https://via.placeholder.com/200x150" alt="Vacuums">
+            <div class="card-content">
+                <h3>Vacuums & more</h3>
+                <a href="#">Shop clearance</a>
+            </div>
+        </div>
+        
+        <!-- Cards Section -->
+        <div class="cards-container">
+            <div class="card">
+                <img src="https://via.placeholder.com/200x150" alt="Vacuums">
+                <div class="card-content">
+                    <h3>Vacuums & more</h3>
+                    <a href="#">Shop clearance</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/200x150" alt="Holiday Decor">
+                <div class="card-content">
+                    <h3>Last dash for holiday decor</h3>
+                    <a href="#">Shop clearance</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/200x150" alt="Furniture">
+                <div class="card-content">
+                    <h3>Furniture's flying off shelves</h3>
+                    <a href="#">Shop clearance</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/200x150" alt="Tech">
+                <div class="card-content">
+                    <h3>Top tech won't last</h3>
+                    <a href="#">Shop clearance</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trending Section -->
+<div class="trending-section">
+    <h2>Trending Now</h2>
+    <div class="carousel-container position-relative">
+        <div class="trending-container d-flex" id="trendingContainer">
+            {% for product in trending_products %}
+                <a href="{{ url_for('seller_routes.product_details', product_id=product.id) }}" 
+                   class="trending-card mx-2 text-decoration-none">
+                    <img src="{{ product.images[0].image_url.replace('\\', '/') if product.images else url_for('static', filename='default_image.jpg') }}" 
+                         alt="{{ product.name }}" class="img-fluid">
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description[:100] }}...</p>
+                </a>
+            {% endfor %}
+        </div>
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" id="prevBtn">
+            <span aria-hidden="true">&larr;</span>
+        </button>
+        <button class="carousel-control-next" type="button" id="nextBtn">
+            <span aria-hidden="true">&rarr;</span>
+        </button>
+    </div>
+</div>
+
+    </main>        
+
+    <footer class="footer">
+        <div class="feedback-section">
+            <p>We’d love to hear what you think!</p>
+            <button class="feedback-btn">Give feedback</button>
+        </div>
+        <div class="links-section">
+            <ul class="footer-links">
+                <li><a href="#">All Departments</a></li>
+                <li><a href="#">Store Directory</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Our Company</a></li>
+                <li><a href="#">Sell on Walmart.com</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Product Recalls</a></li>
+                <li><a href="#">Accessibility</a></li>
+                <li><a href="#">Tax Exempt Program</a></li>
+                <li><a href="#">Get the Walmart App</a></li>
+                <li><a href="#">Sign-up for Email</a></li>
+                <li><a href="#">Safety Data Sheet</a></li>
+                <li><a href="#">Terms of Use</a></li>
+                <li><a href="#">Privacy & Security</a></li>
+                <li><a href="#">California Supply Chain Act</a></li>
+                <li><a href="#">Your Privacy Choices</a></li>
+                <li><a href="#">Notice at Collection</a></li>
+                <li><a href="#">AdChoices</a></li>
+                <li><a href="#">Consumer Health Data Privacy Notices</a></li>
+                <li><a href="#">Request My Personal Information</a></li>
+                <li><a href="#">Brand Shop Directory</a></li>
+                <li><a href="#">Pharmacy</a></li>
+                <li><a href="#">Walmart Business</a></li>
+                <li><a href="#">#IYWYK</a></li>
+                <li><a href="#">Delete Account</a></li>
+            </ul>
+        </div>
+        <div class="copyright-section">
+            <p>&copy; 2024 Walmart. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    let currentIndex = 0;
+        const items = document.querySelectorAll('.trending-card');
+        const totalItems = items.length;
+        const trendingContainer = document.getElementById('trendingContainer');
+        const cardWidth = items[0].offsetWidth + parseInt(getComputedStyle(items[0]).marginRight);
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentIndex < totalItems - 1) {
+                currentIndex++;
+                trendingContainer.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                trendingContainer.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

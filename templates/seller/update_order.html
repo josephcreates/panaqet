@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Update Order</h1>
+        <form method="POST" action="{{ url_for('update_order', order_id=order.id) }}">
+            <div class="form-group">
+                <label for="product_name">Product Name</label>
+                <input type="text" class="form-control" id="product_name" value="{{ order.product_name }}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="status">Order Status</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="Canceled" {% if order.status == 'Canceled' %}selected{% endif %}>Canceled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="total_amount">Total Amount ($)</label>
+                <input type="text" name="total_amount" id="total_amount" value="{{ order.total_amount }}" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Order</button>
+            <a href="{{ url_for('buyer_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

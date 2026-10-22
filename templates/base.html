@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PanaQet{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Google Fonts - Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">  <!-- Default CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product-card.css') }}">
+    {% if current_user.is_authenticated and current_user.user_theme is string %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/' + current_user.user_theme + '.css') }}?v={{ current_user.user_theme }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}?v=light">
+    {% endif %}
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
+    <!-- Styles -->
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f8f9fa;
+            margin-top: 30px; /* Offset for fixed navbar height */
+        }
+    
+        /* Navbar Styling */
+        .navbar {
+            background-color: #fff; /* Default background for expanded navbar */
+            z-index: 1050; /* Ensure navbar stays above the sidebar */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 67px; /* Navbar height */
+        }
+
+        /* Opaque background for the navbar menu when expanded */
+        .navbar-collapse {
+            background-color: rgb(255, 255, 255); /* Semi-opaque background */
+            transition: background-color 0.3s ease; /* Smooth transition */
+            z-index: 1049; /* Ensure it stays below the navbar */
+            width: 100%;
+        }
+
+        /* Ensuring proper alignment of links */
+        .navbar-collapse .nav-link {
+            color: rgb(201, 26, 26); /* White text for contrast */
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+        }
+
+        /* Changing background color on smaller screens when collapsed */
+        .navbar-toggler {
+            background-color: #1ae4b1; /* Match navbar toggle button with background */
+            border: none;
+        }
+
+        /* Ensure dropdowns inside the expanded menu match the navbar styling */
+        .navbar-nav .dropdown-menu {
+            background-color: rgb(231, 228, 28); /* Match the navbar */
+            border: none; /* Remove borders */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Add subtle shadow */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px; /* Expanded width */
+            background-color: #50ceae;
+            color: white;
+            position: fixed;
+            text-align: left;
+            font-size: 12px;
+            align-items: left;
+            top: 67px; /* Adjusted for navbar height */
+            left: 0;
+            padding-top: 10px;
+            height: calc(100vh - 67px); /* Subtract navbar height */
+            transition: width 0.3s ease;
+            z-index: 1; /* Make sidebar appear below navbar */
+        }
+
+        /* Collapsed Sidebar */
+        .sidebar.collapsed {
+            width: 60px; /* Collapsed width */
+        }
+    
+/* Sidebar Hover and Active States */
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #dfd227;
+    width: 100%;
+    text-align: left;
+}
+
+/* Hide everything inside the sidebar when collapsed, except the toggle button */
+.sidebar.collapsed .nav-link, 
+.sidebar.collapsed .link-text, 
+.sidebar.collapsed .sidebar {
+    display: none; /* Hide sidebar contents when collapsed */
+}
+
+/* Hide the background color and label/text in collapsed state */
+.sidebar.collapsed {
+    background-color: transparent; /* Remove background */
+}
+
+/* Show only the collapse/expand button when sidebar is collapsed */
+.sidebar.collapsed .sidebar-toggler {
+    display: flex;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggler {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight:bold;
+    background: transparent;
+    border: none;
+    color: rgb(247, 211, 8);
+    margin-left: 5px;
+}
+
+.sidebar-toggler i {
+    font-size: 20px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+/* Show Text When Sidebar is Expanded */
+.sidebar:not(.collapsed) .link-text {
+    display: inline-block;
+    margin-left: 10px;
+    color: #981ab8;
+}
+
+/* Show Sidebar (Expanded) */
+.sidebar.expanded {
+    left: 0; /* Bring sidebar into view */
+    color: #000;
+}
+
+/* Main Content */
+.main {
+    margin-left: 0px; /* Adjusted for expanded sidebar */
+    padding: 20px;
+    margin-top: 0; /* Remove overlapping margin */
+    transition: margin-left 0.3s ease;
+}
+    
+        /* Hover and Active State for Links (Expanded Sidebar) */
+        .sidebar:not(.collapsed) .nav-link:hover, 
+        .sidebar:not(.collapsed) .nav-link.active {
+            background-color: #dfd227;
+            width: 100%; /* Full width for expanded state */
+            text-align: left;
+        }
+    
+        /* Hover and Active State for Links (Collapsed Sidebar) */
+        .sidebar.collapsed .nav-link:hover, 
+        .sidebar.collapsed .nav-link.active {
+            background-color: #dfd227;
+            width: 40px; /* Adjust width for active/hover state in collapsed mode */
+        }
+    
+        /* Icon Styling */
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            color: #981ab8;
+        }
+    
+        /* Hide Text in Collapsed State */
+        .sidebar.collapsed .link-text {
+            display: none;
+        }
+    
+        /* Main Content Styling */
+        .main {
+            margin-left: 220px; /* Adjusted for expanded sidebar */
+            padding: 20px;
+            margin-top: 0; /* Remove overlapping margin */
+            transition: margin-left 0.3s ease;
+        }
+    
+        /* Adjust Main Content for Collapsed Sidebar */
+        .main.collapsed {
+            margin-left: 60px; /* Adjusted for collapsed sidebar */
+        }
+    
+        .sidebar-toggler i {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #000;
+        }
+    
+        /* Ensure navbar stays above the sidebar */
+        @media (max-width: 991px) {
+            .navbar {
+                background-color: #50ceae; /* Add background color when expanded */
+                z-index: 1050; /* Ensure navbar is on top */
+            }
+    
+            .sidebar {
+                position: absolute;
+                z-index: 1;
+                width: 200px; /* Sidebar width remains the same */
+            }
+    
+            .sidebar.collapsed {
+                width: 60px; /* Keep collapsed width */
+            }
+        }
+    
+        /* Ensure navbar stays above the sidebar in expanded state */
+        @media (max-width: 991px) and (min-width: 576px) {
+            .navbar-collapse {
+                background-color: #50ceae; /* Add background to navbar when expanded on smaller screens */
+                padding-top: 10px; /* Ensure padding around navbar links */
+            }
+    
+            .navbar-toggler {
+                background-color: #50ceae; /* Match navbar toggle button with background */
+            }
+        }
+
+        /* Base styles for smaller screens */
+@media (max-width: 768px) {
+    /* Adjust navbar height and padding for smaller screens */
+    .navbar {
+        height: 60px; /* Reduce height for smaller screens */
+        padding: 0 10px;
+    }
+
+    /* Navbar links: Reduce padding and font size */
+    .navbar-collapse .nav-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 14px;
+    }
+
+    /* Sidebar adjustments */
+    .sidebar {
+        width: 180px; /* Slightly narrower sidebar for smaller screens */
+        font-size: 11px; /* Reduce font size */
+    }
+
+    .sidebar.collapsed {
+        width: 50px; /* Narrower collapsed sidebar */
+    }
+
+    .sidebar .nav-link i {
+        font-size: 18px; /* Adjust icon size */
+    }
+
+    /* Main content margin adjustments */
+    .main {
+        margin-left: 190px; /* Adjust margin for sidebar width */
+    }
+
+    .main.collapsed {
+        margin-left: 50px; /* Adjust margin for collapsed sidebar */
+    }
+}
+
+/* Very small screens (phones) */
+@media (max-width: 576px) {
+    /* Navbar: Stack links vertically */
+    .navbar-collapse {
+        display: block; /* Force vertical layout */
+        padding: 5px;
+    }
+
+    /* Sidebar adjustments */
+    .sidebar {
+        width: 150px; /* Even narrower sidebar */
+    }
+
+    .sidebar.collapsed {
+        width: 40px; /* Collapsed width for very small screens */
+    }
+
+    .sidebar-toggler i {
+        font-size: 16px; /* Smaller toggle icon */
+    }
+
+    /* Sidebar text completely hidden in collapsed state */
+    .sidebar.collapsed .link-text {
+        display: none;
+    }
+
+    /* Main content margin adjustments */
+    .main {
+        margin-left: 160px; /* Adjust for sidebar */
+    }
+
+    .main.collapsed {
+        margin-left: 40px; /* Adjust for collapsed sidebar */
+    }
+
+    /* Navbar links font size */
+    .navbar-collapse .nav-link {
+        font-size: 12px;
+    }
+}
+    </style>    
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" style="height: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'buyer' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('buyer_routes.buyer_dashboard') }}">Buyer Dashboard</a></li>
+                        {% elif current_user.role == 'seller' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('seller_routes.seller_dashboard') }}">Seller Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('seller_routes.available_seller_subscriptions') }}">Available Subscriptions</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('seller_routes.my_subscriptions') }}">My Subscriptions</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('seller_routes.store', seller_id=current_user.id) }}">Store</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('seller_routes.store_setup') }}">Store Setup</a></li>
+                        {% elif current_user.role == 'admin' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.admin_dashboard') }}">Admin Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.manage_subscriptions') }}">View Subscriptions</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.marketplace') }}">Marketplace</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.settings') }}">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.logout') }}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.login') }}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.signup') }}">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>            
+        </div>
+    </nav>    
+
+    {% include 'chat.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <!-- Trending Section -->
+        {% block trending %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% if show_footer %}
+    <footer class="footer">
+        <div class="container-fluid bg-dark text-light py-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Explore</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Buy</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Electronics</a></li>
+                            <li><a href="#">Fashion</a></li>
+                            <li><a href="#">Home & Garden</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Sell</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Start Selling</a></li>
+                            <li><a href="#">Learn More</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid bg-secondary py-1">
+            <div class="container text-center">
+                <p>&copy; 2024 Your Site. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    {% endif %}
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle (including Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <!-- Your custom script -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // JavaScript to toggle sidebar collapse
+document.getElementById("sidebarToggler").addEventListener("click", function() {
+    var sidebar = document.getElementById("sidebar");
+    var mainContent = document.querySelector(".main");
+
+    // Toggle the collapsed class for sidebar and main content
+    sidebar.classList.toggle("collapsed");
+    mainContent.classList.toggle("collapsed");
+});
+    </script>
+</body>
+</html>

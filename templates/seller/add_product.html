@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Google Fonts - Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">  <!-- Default CSS -->
+    {% if current_user.is_authenticated %}
+        <!-- Apply User's Theme -->
+        {% if current_user.user_theme %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/' + current_user.user_theme + '.css') }}?v={{ current_user.user_theme|length }}">
+        {% endif %}
+    {% endif %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('routes.index') }}">
+                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" style="height: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'buyer' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('buyer_routes.buyer_dashboard') }}">Buyer Dashboard</a></li>
+                        {% elif current_user.role == 'seller' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('seller_routes.seller_dashboard') }}">Seller Dashboard</a></li>
+                        {% elif current_user.role == 'admin' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_routes.admin_dashboard') }}">Admin Dashboard</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.marketplace') }}">Marketplace</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.settings') }}">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.logout') }}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.login') }}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('routes.signup') }}">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container mt-5">
+            <h2>Add Product</h2>
+            <form method="POST" action="{{ url_for('routes.add_product') }}" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(class='form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label }}
+                    {{ form.description(class='form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ form.price.label }}
+                    {{ form.price(class='form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ form.category.label }}
+                    {{ form.category(class='form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ form.images.label }}
+                    {{ form.images(class='form-control', multiple=True) }}  <!-- Allow multiple file selection -->
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class='btn btn-primary') }}
+                </div>
+            </form>            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-fluid bg-dark text-light py-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Explore</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Buy</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Electronics</a></li>
+                            <li><a href="#">Fashion</a></li>
+                            <li><a href="#">Home & Garden</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Sell</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Start Selling</a></li>
+                            <li><a href="#">Learn More</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid bg-secondary py-1">
+            <div class="container text-center">
+                <p>&copy; 2024 Your Site. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
