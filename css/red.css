@@ -1,0 +1,31 @@
+/* Red Theme */
+body {
+    background-color: #f8d7da;
+    color: #721c24;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar {
+    background-color: #e04b4b;
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #e04b4b;
+}
+
+.footer {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.footer a {
+    color: #ffffff;
+}
+
+.footer a:hover {
+    color: #c82333;
+}
