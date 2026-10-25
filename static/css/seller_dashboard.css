@@ -1,0 +1,14 @@
+#order-content {
+    margin-top: 20px;
+}
+
+#order-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#order-content th, #order-content td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}

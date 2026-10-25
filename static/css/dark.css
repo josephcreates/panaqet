@@ -1,0 +1,73 @@
+/* Dark Theme */
+body {
+    background-color: #343a40;
+    color: #f8f9fa;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar {
+    background-color: #ffffff; /* White background for the navbar */
+}
+
+.navbar-brand, .nav-link {
+    color: #000000; /* Black text for navbar items */
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #000000; /* Black text for navbar links in light mode */
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #0056b3; /* Optionally, a hover color for better visibility */
+}
+
+.footer {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+.footer a {
+    color: #f8f9fa;
+}
+
+.footer a:hover {
+    color: #adb5bd;
+}
+
+/* Form Label Styles */
+label {
+    color: #000; /* Black text for white labels */
+    background-color: #ffffff; /* White label background */
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+label.dark {
+    color: #ffffff; /* White text for black labels */
+    background-color: #000000; /* Black label background */
+}
+
+/* Cards with White Background and Black Text */
+.card {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.card h5, .card p {
+    color: #000000; /* Ensures black text inside white cards */
+}
+
+/* Form inputs with white background and black text */
+input, select, textarea {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ced4da;
+}
+
+input:focus, select:focus, textarea:focus {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #80bdff;
+    outline: 0;
+}

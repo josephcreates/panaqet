@@ -1,0 +1,31 @@
+/* Green Theme */
+body {
+    background-color: #d4edda;
+    color: #06ff40;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar {
+    background-color: #06ff40;
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #06ff40;
+}
+
+.footer {
+    background-color: #06ff40;
+    color: #ffffff;
+}
+
+.footer a {
+    color: #ffffff;
+}
+
+.footer a:hover {
+    color: #06ff40;
+}
